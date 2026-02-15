@@ -86,12 +86,6 @@ export default function Navbar() {
                 >
                   Log In
                 </BaseButton>
-                <BaseButton
-                  variant="primary"
-                  href="/signup"
-                >
-                  Sign Up
-                </BaseButton>
               </>
             )}
           </div>

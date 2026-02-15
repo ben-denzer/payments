@@ -90,14 +90,6 @@ export default function Login() {
   return (
     <AuthForm
       title="Sign in to your account"
-      subtitle={
-        <>
-          Or{' '}
-          <Link href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
-            create a new account
-          </Link>
-        </>
-      }
       error={error}
       onSubmit={handleSubmit}
       submitButtonText="Sign in"

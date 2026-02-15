@@ -2,16 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hashPassword, createJWT } from '@/lib/auth';
 import { executeQuery, executeInsert } from '@/lib/db';
 import { logError } from '@/lib/logger';
+import { MIN_PASSWORD_LENGTH } from '@/lib/constants';
+
+const INITIAL_ACCOUNT_SIGNUP_SECRET = process.env.INITIAL_ACCOUNT_SIGNUP_SECRET;
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { email, password, signupKey } = await request.json();
 
     // Validate input
     if (!email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
+      );
+    }
+
+    if (!signupKey || !INITIAL_ACCOUNT_SIGNUP_SECRET || signupKey !== INITIAL_ACCOUNT_SIGNUP_SECRET) {
+      return NextResponse.json(
+        { error: 'Invalid credentials' },
+        { status: 401 }
       );
     }
 
@@ -25,9 +35,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Check password length
-    if (password.length < 6) {
+    if (password.length < MIN_PASSWORD_LENGTH) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
+        { error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long` },
         { status: 400 }
       );
     }
@@ -50,12 +60,12 @@ export async function POST(request: NextRequest) {
 
     // Create user
     const userId = await executeInsert(
-      'INSERT INTO users (email, password_hash) VALUES (?, ?)',
-      [email, hashedPassword]
+      'INSERT INTO users (email, password_hash, is_admin, is_owner) VALUES (?, ?, ?, ?)',
+      [email, hashedPassword, true, true]
     );
 
     // Create JWT token
-    const token = await createJWT({ userId, email });
+    const token = await createJWT({ userId, email, isAdmin: true, isOwner: true });
 
     // Set HTTP-only cookie
     const response = NextResponse.json(

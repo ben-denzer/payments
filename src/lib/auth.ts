@@ -9,6 +9,8 @@ const secret = new TextEncoder().encode(JWT_SECRET);
 export interface JWTPayload {
   userId: number;
   email: string;
+  isAdmin: boolean | undefined | null;
+  isOwner: boolean | undefined | null;
   iat?: number;
   exp?: number;
 }

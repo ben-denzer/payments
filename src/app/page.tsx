@@ -89,15 +89,6 @@ export default function Home() {
           ) : (
             <>
               <BaseButton
-                variant="primary"
-                shape="pill"
-                size="lg"
-                href="/signup"
-                className="md:w-[158px]"
-              >
-                Sign Up
-              </BaseButton>
-              <BaseButton
                 variant="secondary"
                 shape="pill"
                 size="lg"

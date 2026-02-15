@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AuthForm from '../../components/AuthForm';
 import BaseInput from '../../components/BaseInput';
+import { MIN_PASSWORD_LENGTH } from '@/lib/constants';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -52,12 +53,18 @@ export default function SignUp() {
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters long`);
       return;
     }
 
     setIsLoading(true);
+
+    const key = window.location.search.split('?key=')[1];
+    if (!key) {
+      setError('Invalid key');
+      return;
+    }
 
     try {
       const response = await fetch('/api/auth/signup', {
@@ -65,7 +72,7 @@ export default function SignUp() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, signupKey: key }),
         credentials: 'include',
       });
 
@@ -101,14 +108,6 @@ export default function SignUp() {
   return (
     <AuthForm
       title="Create your account"
-      subtitle={
-        <>
-          Or{' '}
-          <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-            sign in to your existing account
-          </Link>
-        </>
-      }
       error={error}
       onSubmit={handleSubmit}
       submitButtonText="Sign up"
