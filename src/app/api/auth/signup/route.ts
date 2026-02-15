@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Create JWT token
-    const token = await createJWT({ userId, email, isAdmin: true, isOwner: true });
+    const token = await createJWT({ id: userId, email, isAdmin: true, isOwner: true });
 
     // Set HTTP-only cookie
     const response = NextResponse.json(

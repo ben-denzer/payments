@@ -1,19 +1,10 @@
 import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';
-import { logError } from './logger';
+import { JWTPayload } from './types';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const secret = new TextEncoder().encode(JWT_SECRET);
 
-
-export interface JWTPayload {
-  userId: number;
-  email: string;
-  isAdmin: boolean | undefined | null;
-  isOwner: boolean | undefined | null;
-  iat?: number;
-  exp?: number;
-}
 
 // Password utilities
 export async function hashPassword(password: string): Promise<string> {
@@ -40,7 +31,7 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secret);
     function isJWTPayload(payload: unknown): payload is JWTPayload {
-      return typeof payload === 'object' && payload !== null && 'userId' in payload && typeof payload.userId === 'number' && 'email' in payload && typeof payload.email === 'string';
+      return typeof payload === 'object' && payload !== null && 'id' in payload && typeof payload.id === 'number' && 'email' in payload && typeof payload.email === 'string';
     }
 
     if (!isJWTPayload(payload)) {
@@ -53,13 +44,4 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
     // They return null which is handled appropriately by callers
     return null;
   }
-}
-
-// Cookie utilities for client-side auth
-export function createAuthCookie(token: string): string {
-  return `auth-token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=${7 * 24 * 60 * 60}`; // 7 days
-}
-
-export function clearAuthCookie(): string {
-  return 'auth-token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0';
 }

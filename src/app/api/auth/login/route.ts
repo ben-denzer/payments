@@ -3,8 +3,10 @@ import { verifyPassword, createJWT } from '@/lib/auth';
 import { executeQuerySingle } from '@/lib/db';
 import { logError } from '@/lib/logger';
 import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME } from '@/lib/constants';
+import { DBUser, User } from '@/lib/types';
 
-export async function POST(request: NextRequest) {
+
+export async function POST(request: NextRequest): Promise<NextResponse<{ message: string } | { error: string }>> {
   try {
     const { email, password } = await request.json();
 
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by email
-    const user = await executeQuerySingle(
+    const user: Omit<DBUser, 'created_at' | 'updated_at'> | null = await executeQuerySingle(
       'SELECT id, email, password_hash, is_admin, is_owner FROM users WHERE email = ?',
       [email]
     );
@@ -38,8 +40,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const userData: User = {
+      id: user.id,
+      email: user.email,
+      isAdmin: !!user.is_admin,
+      isOwner: !!user.is_owner,
+    };
+
     // Create JWT token
-    const token = await createJWT({ userId: user.id as number, email: user.email as string, isAdmin: (user.is_admin || false) as boolean, isOwner: (user.is_owner || false) as boolean });
+    const token = await createJWT(userData);
 
     const response = NextResponse.json(
       { message: 'Login successful' },
