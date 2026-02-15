@@ -14,19 +14,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_created_at ON users(created_at);
 
-CREATE USER 'swish'@'localhost' IDENTIFIED BY '<INSERT PASSWORD HERE>';
-
-GRANT SELECT, INSERT, UPDATE, DELETE ON roundRobin.* TO 'swish'@'localhost';
-FLUSH PRIVILEGES;
-
--- Optional: Create sessions table for session management (if needed later)
--- CREATE TABLE IF NOT EXISTS sessions (
---     id VARCHAR(255) PRIMARY KEY,
---     user_id INT NOT NULL,
---     expires_at TIMESTAMP NOT NULL,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
--- );
 
 -- Create password_reset_tokens table for forgot password functionality
 CREATE TABLE IF NOT EXISTS password_reset_tokens (
@@ -41,6 +28,6 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
     INDEX idx_expires_at (expires_at)
 );
 
--- Grant permissions to your application user (adjust username/database as needed)
--- GRANT SELECT, INSERT, UPDATE, DELETE ON your_database.users TO 'app_user'@'localhost';
+-- CREATE USER 'paymentsapp'@'localhost' IDENTIFIED BY '<INSERT PASSWORD HERE>';
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON payments.* TO 'paymentsapp'@'localhost';
 -- FLUSH PRIVILEGES;
