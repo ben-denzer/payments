@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import BaseButton from '../../../components/BaseButton';
-import { User } from '@/lib/types';
+import BaseButton from '@/components/BaseButton';
+import { User } from '@/lib/types/user';
+import { checkAuth } from '@/lib/checkAuth';
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -12,25 +12,20 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    async function checkAuth() {
-      try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData.user);
-        } else {
-          router.push('/login');
-        }
-      } catch {
+    const checkAuthEffect = async () => {
+      setIsLoading(true);
+      const user = await checkAuth('applicant');
+      if (user) {
+        setUser(user);
+      } else {
         router.push('/login');
-      } finally {
-        setIsLoading(false);
       }
-    }
+      setIsLoading(false);
+    };
 
-    checkAuth();
+    checkAuthEffect().catch(() => {
+      setIsLoading(false);
+    });
   }, [router]);
 
   if (isLoading) {

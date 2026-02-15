@@ -6,7 +6,7 @@ interface LogData {
   error?: string | Error;
   level?: 'INFO' | 'ERROR' | 'WARN';
   context?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 class ClientLogger {
@@ -27,7 +27,7 @@ class ClientLogger {
         headers['x-api-key'] = this.apiKey;
       }
 
-      const payload: any = {
+      const payload: LogData = {
         level: data.level || 'ERROR',
         context: data.context,
         metadata: {
@@ -65,14 +65,14 @@ class ClientLogger {
   /**
    * Log an error from the client side
    */
-  error(error: string | Error, context?: string, metadata?: Record<string, any>): void {
+  error(error: string | Error, context?: string, metadata?: Record<string, unknown>): void {
     this.sendLog({ error, level: 'ERROR', context, metadata });
   }
 
   /**
    * Log a warning from the client side
    */
-  warn(message: string, context?: string, metadata?: Record<string, any>): void {
+  warn(message: string, context?: string, metadata?: Record<string, unknown>): void {
     this.sendLog({
       message,
       level: 'WARN',
@@ -84,7 +84,7 @@ class ClientLogger {
   /**
    * Log info from the client side
    */
-  info(message: string, context?: string, metadata?: Record<string, any>): void {
+  info(message: string, context?: string, metadata?: Record<string, unknown>): void {
     this.sendLog({
       message,
       level: 'INFO',

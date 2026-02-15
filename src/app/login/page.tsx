@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import AuthForm from '../../components/AuthForm';
-import BaseInput from '../../components/BaseInput';
+import AuthForm from '@/components/AuthForm';
+import BaseInput from '@/components/BaseInput';
+import { checkAuth } from '@/lib/checkAuth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -15,25 +15,17 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include',
-        });
-        if (response.ok) {
-          // User is already logged in, redirect to dashboard
-          router.push('/dashboard');
-          return;
-        }
-      } catch {
-        // User is not logged in, continue to show login form
-      } finally {
-        setIsCheckingAuth(false);
+    const checkAuthEffect = async () => {
+      const user = await checkAuth('generic');
+      if (user) {
+        router.push('/dashboard');
       }
+      setIsCheckingAuth(false);
     };
 
-    checkAuth();
+    checkAuthEffect().catch(() => {
+      setIsCheckingAuth(false);
+    });
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -111,6 +103,7 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
           label="Email address"
           groupPosition="first"
+          autoFocus={true}
         />
         <BaseInput
           id="password"

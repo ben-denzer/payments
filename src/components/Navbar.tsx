@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import BaseButton from './BaseButton';
+import { checkAuth } from '@/lib/checkAuth';
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,21 +12,21 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check if user is logged in by checking for auth cookie
-    const checkAuthStatus = async () => {
-      try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include',
-        });
-        setIsLoggedIn(response.ok);
-      } catch {
+    const checkAuthEffect = async () => {
+      const user = await checkAuth('generic');
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
         setIsLoggedIn(false);
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
-    checkAuthStatus();
+    checkAuthEffect().catch(() => {
+      setIsLoading(false);
+    });
+
+    checkAuthEffect();
   }, [pathname]); // Re-check auth status when route changes
 
   const handleLogout = async () => {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT } from '@/lib/auth';
 import { executeQuerySingle } from '@/lib/db';
 import { logError } from '@/lib/logger';
-import { DBUser, User } from '@/lib/types';
+import { DBUser, User } from '@/lib/types/user';
 import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME } from '@/lib/constants';
 
 class AuthError extends Error {
@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
 
     // Verify JWT token
     const payload = await verifyJWT(token);
-    console.log('payload', payload);
     if (!payload) {
       throw new AuthError('Invalid or expired token');
     }

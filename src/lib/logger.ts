@@ -4,6 +4,7 @@ import type * as NewRelicModule from 'newrelic';
 // Conditionally import NewRelic
 let newrelic: typeof NewRelicModule | null = null;
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   newrelic = require('newrelic');
 } catch {
   // NewRelic not available, logging will be skipped

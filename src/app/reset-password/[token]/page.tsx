@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import AuthForm from '../../../components/AuthForm';
-import BaseInput from '../../../components/BaseInput';
+import AuthForm from '@/components/AuthForm';
+import BaseInput from '@/components/BaseInput';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');

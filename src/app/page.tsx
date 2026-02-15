@@ -1,33 +1,28 @@
 'use client';
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState, useEffect } from 'react';
-import BaseButton from '../components/BaseButton';
-import { User } from '@/lib/types';
+import BaseButton from '@/components/BaseButton';
+import { User } from '@/lib/types/user';
+import { checkAuth } from "@/lib/checkAuth";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function checkAuth() {
-      try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData.user);
-        }
-      } catch {
-        // User not authenticated
-      } finally {
-        setIsLoading(false);
+    const checkAuthEffect = async () => {
+      setIsLoading(true);
+      const user = await checkAuth('generic');
+      if (user) {
+        setUser(user);
       }
-    }
+      setIsLoading(false);
+    };
 
-    checkAuth();
+    checkAuthEffect().catch(() => {
+      setIsLoading(false);
+    });
   }, []);
 
   if (isLoading) {

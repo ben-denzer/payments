@@ -3,7 +3,7 @@ import { verifyPassword, createJWT } from '@/lib/auth';
 import { executeQuerySingle } from '@/lib/db';
 import { logError } from '@/lib/logger';
 import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME } from '@/lib/constants';
-import { DBUser, User } from '@/lib/types';
+import { DBUser, User, UserSchema } from '@/lib/types/user';
 
 
 export async function POST(request: NextRequest): Promise<NextResponse<{ message: string } | { error: string }>> {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
         { error: 'Invalid email or password' },
         { status: 401 }
       );
-    }
+  }
 
     const userData: User = {
       id: user.id,
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
       isAdmin: !!user.is_admin,
       isOwner: !!user.is_owner,
     };
+    UserSchema.parse(userData);
 
     // Create JWT token
     const token = await createJWT(userData);

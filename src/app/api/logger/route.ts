@@ -26,7 +26,6 @@ function isRateLimited(ip: string): boolean {
 function validateOrigin(request: NextRequest): boolean {
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
-  const userAgent = request.headers.get('user-agent') || '';
 
   // Allow requests from our domain
   const allowedOrigins = [
