@@ -29,5 +29,5 @@ CREATE TABLE IF NOT EXISTS files (
 
 -- Create indexes for files table
 CREATE INDEX idx_files_applicant_org_id ON files(applicant_org_id);
-CREATE INDEX idx_files_type ON files(type);
+CREATE INDEX idx_files_type ON files(file_category);
 CREATE INDEX idx_files_created_at ON files(created_at);
