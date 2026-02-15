@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';
-import { JWTPayload, JWTPayloadSchema, User } from './types/user';
+import { JWTPayload, JWTPayloadSchema, User, UserSchema } from './types/user';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const secret = new TextEncoder().encode(JWT_SECRET);
@@ -18,6 +18,7 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 
 // JWT utilities
 export async function createJWT(payload: User): Promise<string> {
+  UserSchema.parse(payload); // no try/catch, let the caller handle the error
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
