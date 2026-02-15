@@ -110,9 +110,6 @@ export async function POST(request: NextRequest) {
     const resetToken = randomBytes(32).toString('hex');
     const tokenHash = await hashPassword(resetToken);
 
-    console.log('Generated reset token:', resetToken.substring(0, 8) + '...');
-    console.log('Token hash starts with:', tokenHash.substring(0, 20) + '...');
-
     // Calculate expiration (1 hour from now)
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1);
@@ -129,8 +126,6 @@ export async function POST(request: NextRequest) {
       'INSERT INTO password_reset_tokens (id, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)',
       [tokenId, user.id as number, tokenHash, expiresAt]
     );
-
-    console.log('Stored token with ID:', tokenId, 'for user:', user.id);
 
     // Send reset email
     try {

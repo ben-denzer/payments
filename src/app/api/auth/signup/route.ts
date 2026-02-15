@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hashPassword, createJWT } from '@/lib/auth';
 import { executeQuery, executeInsert } from '@/lib/db';
 import { logError } from '@/lib/logger';
-import { MIN_PASSWORD_LENGTH } from '@/lib/constants';
+import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME, MIN_PASSWORD_LENGTH } from '@/lib/constants';
 
 const INITIAL_ACCOUNT_SIGNUP_SECRET = process.env.INITIAL_ACCOUNT_SIGNUP_SECRET;
 
@@ -73,13 +73,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
 
-    response.cookies.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' for better compatibility
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/', // Ensure cookie is available on all paths
-    });
+    response.cookies.set(AUTH_COOKIE_NAME, token, AUTH_COOKIE_CONFIG('login'));
 
     return response;
   } catch (error) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyPassword, createJWT } from '@/lib/auth';
 import { executeQuerySingle } from '@/lib/db';
 import { logError } from '@/lib/logger';
+import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME } from '@/lib/constants';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     // Find user by email
     const user = await executeQuerySingle(
-      'SELECT id, email, password_hash FROM users WHERE email = ?',
+      'SELECT id, email, password_hash, is_admin, is_owner FROM users WHERE email = ?',
       [email]
     );
 
@@ -38,21 +39,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Create JWT token
-    const token = await createJWT({ userId: user.id as number, email: user.email as string });
+    const token = await createJWT({ userId: user.id as number, email: user.email as string, isAdmin: (user.is_admin || false) as boolean, isOwner: (user.is_owner || false) as boolean });
 
-    // Set HTTP-only cookie
     const response = NextResponse.json(
       { message: 'Login successful' },
       { status: 200 }
     );
 
-    response.cookies.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' for better compatibility
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/', // Ensure cookie is available on all paths
-    });
+    response.cookies.set(AUTH_COOKIE_NAME, token, AUTH_COOKIE_CONFIG('login'));
 
     return response;
   } catch (error) {

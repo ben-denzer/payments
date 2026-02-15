@@ -8,8 +8,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const token = searchParams.get('token');
 
-    console.log('Token validation request for token:', token?.substring(0, 8) + '...');
-
     if (!token) {
       return NextResponse.json(
         { error: 'Token is required' },
@@ -23,10 +21,7 @@ export async function GET(request: NextRequest) {
       []
     );
 
-    console.log('Found', validTokens?.length || 0, 'valid tokens in database');
-
     if (!validTokens || validTokens.length === 0) {
-      console.log('No valid tokens found');
       return NextResponse.json(
         { error: 'Invalid or expired token' },
         { status: 400 }
@@ -36,25 +31,20 @@ export async function GET(request: NextRequest) {
     // Find the token that matches the provided token
     let matchingTokenRecord = null;
     for (const tokenRecord of validTokens) {
-      console.log('Checking token record:', tokenRecord.id, 'for user:', tokenRecord.user_id);
       const isValidToken = await verifyPassword(token, tokenRecord.token_hash as string);
-      console.log('Token verification result:', isValidToken);
       if (isValidToken) {
         matchingTokenRecord = tokenRecord;
-        console.log('Found matching token!');
         break;
       }
     }
 
     if (!matchingTokenRecord) {
-      console.log('No matching token found');
       return NextResponse.json(
         { error: 'Invalid token' },
         { status: 400 }
       );
     }
 
-    console.log('Token validation successful');
     return NextResponse.json(
       { message: 'Token is valid' },
       { status: 200 }

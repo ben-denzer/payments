@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { logError } from '@/lib/logger';
+import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME } from '@/lib/constants';
 
 export async function POST() {
   try {
@@ -9,12 +10,7 @@ export async function POST() {
     );
 
     // Clear the auth cookie
-    response.cookies.set('auth-token', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 0, // Expire immediately
-    });
+    response.cookies.set(AUTH_COOKIE_NAME, '', AUTH_COOKIE_CONFIG('logout'));
 
     return response;
   } catch (error) {

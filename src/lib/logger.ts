@@ -12,7 +12,7 @@ try {
 /**
  * Cached service identifier for logging (computed once at module load)
  */
-const SERVICE_NAME = `rr-${process.env.APP_ENV || 'development'}`;
+const SERVICE_NAME = `rr-${process.env.NEXT_PUBLIC_APP_ENV || 'development'}`;
 
 /**
  * Checks if an error is an authorization/authentication error that should not be logged

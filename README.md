@@ -32,7 +32,7 @@ MAILGUN_FROM_EMAIL=your-mailgun-from-email
 JWT_SECRET=your-very-secure-jwt-secret-key-change-this-in-production
 
 # Application Environment (for logging service identification)
-APP_ENV=development
+NEXT_PUBLIC_APP_ENV=development
 
 # API Keys for client logging (comma-separated list)
 VALID_API_KEYS=your-api-key-1,your-api-key-2
