@@ -20,7 +20,7 @@ export async function POST(): Promise<
     await validateAdmin(await cookies(), ROUTE_NAME);
 
     const applicantOrgList = await executeQuery<DBApplicantOrg>(
-      'SELECT id, company_name, primary_contact_name, primary_contact_email, storage_bucket_base, created_at, updated_at FROM applicant_org',
+      'SELECT id, company_name, primary_contact_name, primary_contact_email, storage_bucket_base, status,created_at, updated_at FROM applicant_org ORDER BY updated_at DESC',
       [],
     );
 

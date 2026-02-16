@@ -33,3 +33,7 @@ CREATE INDEX idx_files_type ON files(file_category);
 CREATE INDEX idx_files_created_at ON files(created_at);
 
 ALTER TABLE applicant_org ADD COLUMN storage_bucket_base VARCHAR(25) NOT NULL;
+
+ALTER TABLE applicant_org ADD COLUMN status VARCHAR(25) NOT NULL DEFAULT 'invited';
+
+CREATE INDEX idx_applicant_org_status ON applicant_org(status);

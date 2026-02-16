@@ -1,5 +1,16 @@
 import z from 'zod';
 
+export const ApplicantOrgStatusSchema = z.union([
+  z.literal('invited'),
+  z.literal('in_progress'),
+  z.literal('applied'),
+  z.literal('approved'),
+  z.literal('rejected'),
+  z.literal('archived'),
+]);
+
+export type ApplicantOrgStatus = z.infer<typeof ApplicantOrgStatusSchema>;
+
 export const DBApplicantOrgInputSchema = z.object({
   company_name: z
     .string()
@@ -22,6 +33,7 @@ export type DBApplicantOrgInput = z.infer<typeof DBApplicantOrgInputSchema>;
 
 export const DBApplicantOrgSchema = DBApplicantOrgInputSchema.extend({
   id: z.number(),
+  status: ApplicantOrgStatusSchema,
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -34,6 +46,7 @@ export const ApplicantOrgSchema = z.object({
   primaryContactName: z.string().min(1).max(255),
   primaryContactEmail: z.email(),
   storageBucketBase: z.string().min(2).max(255),
+  status: ApplicantOrgStatusSchema,
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -52,6 +65,7 @@ export const mapDBApplicantOrgToApplicantOrg = (
     primaryContactName: dbApplicantOrg.primary_contact_name,
     primaryContactEmail: dbApplicantOrg.primary_contact_email,
     storageBucketBase: dbApplicantOrg.storage_bucket_base,
+    status: dbApplicantOrg.status,
     createdAt: new Date(dbApplicantOrg.created_at).toISOString(),
     updatedAt: new Date(dbApplicantOrg.updated_at).toISOString(),
   };
