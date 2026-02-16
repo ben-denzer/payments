@@ -1,7 +1,7 @@
 // Client-side logger utility that sends logs to the server
 // This avoids exposing New Relic API keys to the client
 
-import { ApiRoutes } from "./routes";
+import { ApiRoutes } from './routes';
 
 interface LogData {
   message?: string;
@@ -42,7 +42,8 @@ class ClientLogger {
 
       // Handle different log types
       if (data.level === 'ERROR' || !data.level) {
-        payload.error = data.error instanceof Error ? data.error.message : data.error;
+        payload.error =
+          data.error instanceof Error ? data.error.message : data.error;
       } else {
         payload.message = data.message;
       }
@@ -67,31 +68,44 @@ class ClientLogger {
   /**
    * Log an error from the client side
    */
-  error(error: string | Error, context?: string, metadata?: Record<string, unknown>): void {
+  error(
+    e: string | Error | unknown,
+    context?: string,
+    metadata?: Record<string, unknown>,
+  ): void {
+    const error = e instanceof Error ? e : new Error(String(e));
     this.sendLog({ error, level: 'ERROR', context, metadata });
   }
 
   /**
    * Log a warning from the client side
    */
-  warn(message: string, context?: string, metadata?: Record<string, unknown>): void {
+  warn(
+    message: string,
+    context?: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.sendLog({
       message,
       level: 'WARN',
       context: context || 'Client Warning',
-      metadata
+      metadata,
     });
   }
 
   /**
    * Log info from the client side
    */
-  info(message: string, context?: string, metadata?: Record<string, unknown>): void {
+  info(
+    message: string,
+    context?: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.sendLog({
       message,
       level: 'INFO',
       context: context || 'Client Info',
-      metadata
+      metadata,
     });
   }
 }
@@ -113,4 +127,4 @@ export const logClientWarning = (message: string, context?: string) => {
 
 export const logClientInfo = (message: string, context?: string) => {
   clientLogger.info(message, context);
-};;
+};

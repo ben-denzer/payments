@@ -17,4 +17,5 @@ export enum ApiRoutes {
   SIGNUP = '/api/auth/signup',
   LOGGER = '/api/logger',
   CREATE_CLIENT = '/api/admin/create-client',
+  GET_CLIENT_LIST = '/api/admin/get-client-list',
 }

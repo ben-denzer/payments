@@ -5,11 +5,18 @@ import { useRouter } from 'next/navigation';
 import BaseButton from '@/components/BaseButton';
 import { User } from '@/lib/types/user';
 import { checkAuth } from '@/lib/checkAuth';
-import { Routes } from '@/lib/routes';
+import { ApiRoutes, Routes } from '@/lib/routes';
+import { ClientLogger } from '@/lib/client-logger';
+import {
+  ApplicantOrgList,
+  ApplicantOrgListSchema,
+} from '@/lib/types/applicantOrg';
+const logger = new ClientLogger();
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [clientList, setClientList] = useState<ApplicantOrgList | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,13 +36,40 @@ export default function Dashboard() {
     });
   }, [router]);
 
+  const getClientList = async () => {
+    try {
+      const response = await fetch(ApiRoutes.GET_CLIENT_LIST, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to get client list');
+      }
+      const data: { message: string; clientList: ApplicantOrgList } =
+        await response.json();
+      ApplicantOrgListSchema.parse(data.clientList);
+      setClientList(data.clientList);
+    } catch (e) {
+      logger.error(e, 'Failed to get client list');
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    getClientList();
+  }, []);
+
+  console.log(clientList);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white shadow rounded-lg p-6">
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Loading...
+              </h1>
             </div>
           </div>
         </div>
@@ -52,13 +86,17 @@ export default function Dashboard() {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow rounded-lg p-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Admin Dashboard
+            </h1>
             <p className="text-gray-600">Welcome to your personal dashboard!</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-blue-900 mb-2">Account Information</h2>
+              <h2 className="text-xl font-semibold text-blue-900 mb-2">
+                Account Information
+              </h2>
               <div className="space-y-2">
                 <p className="text-blue-800">
                   <span className="font-medium">Email:</span> {user.email}
@@ -70,7 +108,9 @@ export default function Dashboard() {
             </div>
 
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-green-900 mb-2">Quick Actions</h2>
+              <h2 className="text-xl font-semibold text-green-900 mb-2">
+                Quick Actions
+              </h2>
               <div className="space-y-3">
                 <BaseButton
                   variant="success"
@@ -80,19 +120,28 @@ export default function Dashboard() {
                   Create New Client
                 </BaseButton>
                 <p className="text-sm text-green-700">
-                  You are successfully logged in! This page is only accessible to authenticated users.
+                  You are successfully logged in! This page is only accessible
+                  to authenticated users.
                 </p>
               </div>
             </div>
           </div>
 
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-yellow-900 mb-2">Development Notes</h2>
+            <h2 className="text-xl font-semibold text-yellow-900 mb-2">
+              Development Notes
+            </h2>
             <ul className="text-yellow-800 space-y-1 text-sm">
               <li>• This is a protected page that requires authentication</li>
-              <li>• Unauthenticated users are automatically redirected to login</li>
-              <li>• Authentication is handled via HTTP-only cookies and JWT tokens</li>
-              <li>• You can extend this dashboard with more features as needed</li>
+              <li>
+                • Unauthenticated users are automatically redirected to login
+              </li>
+              <li>
+                • Authentication is handled via HTTP-only cookies and JWT tokens
+              </li>
+              <li>
+                • You can extend this dashboard with more features as needed
+              </li>
             </ul>
           </div>
         </div>
