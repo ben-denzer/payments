@@ -14,7 +14,7 @@ import {
 } from '@/lib/types/applicantOrg';
 const logger = new ClientLogger();
 
-export default function Dashboard() {
+export default function AdminDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [clientList, setClientList] = useState<ApplicantOrgList | null>(null);
@@ -93,36 +93,16 @@ export default function Dashboard() {
             <p className="text-gray-600">Welcome to your personal dashboard!</p>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold text-blue-900 mb-2">
-              Account Information
-            </h2>
-            <div className="space-y-2">
-              <p className="text-blue-800">
-                <span className="font-medium">Email:</span> {user.email}
-              </p>
-              <p className="text-blue-800">
-                <span className="font-medium">User ID:</span> {user.id}
-              </p>
-            </div>
-          </div>
-
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">
                 Recent Clients
               </h2>
               <div className="flex space-x-3">
-                <BaseButton
-                  variant="success"
-                  href={Routes.CREATE_CLIENT}
-                >
+                <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
                   New Client
                 </BaseButton>
-                <BaseButton
-                  variant="secondary"
-                  href={Routes.CLIENTS}
-                >
+                <BaseButton variant="secondary" href={Routes.CLIENTS}>
                   View All
                 </BaseButton>
               </div>
