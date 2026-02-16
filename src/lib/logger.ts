@@ -13,7 +13,7 @@ try {
 /**
  * Cached service identifier for logging (computed once at module load)
  */
-const SERVICE_NAME = `rr-${process.env.NEXT_PUBLIC_APP_ENV || 'development'}`;
+const SERVICE_NAME = `payments-${process.env.NEXT_PUBLIC_APP_ENV || 'development'}`;
 
 /**
  * Checks if an error is an authorization/authentication error that should not be logged
@@ -95,13 +95,27 @@ export function logErrorWithMetadata(
     ...metadata
   };
 
+
+  let errorObj: Error;
   if (typeof error === 'string') {
-    newrelic.noticeError(new Error(error), fullMetadata);
+   errorObj = new Error(error);
   } else if (error instanceof Error) {
-    newrelic.noticeError(error, fullMetadata);
+    errorObj = error;
   } else {
-    newrelic.noticeError(new Error(String(error)), fullMetadata);
+    errorObj = new Error(String(error));
   }
+
+  // Log to NewRelic as a log event
+  const logEvent = {
+    message: errorObj.message,
+    level: 'ERROR' as const,
+    timestamp: Date.now(),
+    context: context || 'Unknown',
+    service: SERVICE_NAME,
+    error: errorObj,
+    ...fullMetadata
+  };
+  newrelic.recordLogEvent(logEvent);
 }
 
 /**

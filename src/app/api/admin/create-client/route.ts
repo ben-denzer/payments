@@ -1,0 +1,44 @@
+import { executeInsert } from "@/lib/db";
+import { logErrorWithMetadata, logInfoWithMetadata } from "@/lib/logger";
+import { parseZodError } from "@/lib/parseZodError";
+import { DBApplicantOrgInput, DBApplicantOrgInputSchema } from "@/lib/types/applicantOrg";
+import { NextRequest, NextResponse } from "next/server";
+import { s3Client } from "@/lib/s3client";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { cookies } from "next/headers";
+import { validateAdmin } from "../validateAdmin";
+
+const isProd = process.env.NEXT_PUBLIC_APP_ENV === 'production';
+
+export async function POST(request: NextRequest): Promise<NextResponse<{ message: string } | { error: string }>> {
+  try {
+    debugger;
+    logInfoWithMetadata('Creating client', 'Create Client API');
+    await validateAdmin(await cookies());
+
+    const data: DBApplicantOrgInput = await request.json();
+    const result = DBApplicantOrgInputSchema.safeParse(data);
+    if (!result.success) {
+      logErrorWithMetadata(new Error(parseZodError(result.error)), 'Create Client API', { data });
+      return NextResponse.json({ error: parseZodError(result.error) }, { status: 400 });
+    }
+    const applicantOrg = await executeInsert('INSERT INTO applicant_org(company_name, primary_contact_name, primary_contact_email) VALUES (?, ?, ?)', [data.company_name, data.primary_contact_name, data.primary_contact_email]);
+    logInfoWithMetadata('Client created, creating bucket', 'Create Client API', { applicantOrg, data });
+
+    const newBucket = await s3Client.send(new PutObjectCommand({
+      Bucket: '',
+      Key: `${isProd ? '' : 'test'}-${applicantOrg}-${data.company_name.toLowerCase().replace(/ /g, '-').slice(0, 20)}/abc.json`,
+      Body: JSON.stringify({ message: 'Hello, world!' }),
+    }));
+
+    logInfoWithMetadata('Success. Client and bucket created', 'Create Client API', { newBucket });
+
+    return NextResponse.json({ message: applicantOrg.toString() }, { status: 200 });
+  } catch (error) {
+    if (error instanceof Error && error.message.toLowerCase().includes('duplicate entry') && error.message.toLowerCase().includes('primary_contact_email')) {
+      return NextResponse.json({ error: 'Email already associated with another client.' }, { status: 400 });
+    }
+    logErrorWithMetadata(error, 'Create Client API');
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

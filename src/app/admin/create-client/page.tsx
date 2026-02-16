@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
-import { Routes } from '@/lib/routes';
+import { ApiRoutes, Routes } from '@/lib/routes';
 import { DBApplicantOrgInput, DBApplicantOrgInputSchema } from '@/lib/types/applicantOrg';
 import { parseZodError } from '@/lib/parseZodError';
 
@@ -18,12 +18,6 @@ export default function CreateClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // // Basic validation
-    // if (!companyName || !contactName || !contactEmail) {
-    //   setError('All fields are required');
-    //   return;
-    // }
 
     const apiData: DBApplicantOrgInput = {
       company_name: companyName,
@@ -41,19 +35,21 @@ export default function CreateClient() {
     setIsLoading(true);
 
     try {
-      // For now, just log to console as requested
-      console.log('Creating client:', {
-        companyName,
-        contactName,
-        contactEmail,
+      const response = await fetch(ApiRoutes.CREATE_CLIENT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(apiData),
+        credentials: 'include',
       });
 
-      // TODO: Implement actual API call here
-      // const response = await fetch(ApiRoutes.CREATE_CLIENT, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ companyName, contactName, contactEmail }),
-      // });
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || 'Failed to create client. Please try again.');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('success',data);
 
       // Reset form
       setCompanyName('');
