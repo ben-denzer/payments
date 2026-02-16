@@ -1,12 +1,3 @@
-export interface ApplicantOrg {
-  id: number;
-  company_name: string; // 255
-  primary_contact_name: string; // 255
-  primary_contact_email: string; // 255
-  created_at: string;
-  updated_at?: string;
-}
-
 export interface File {
   id: number;
   url: string; // 500

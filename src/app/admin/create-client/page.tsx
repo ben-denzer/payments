@@ -5,6 +5,8 @@ import Link from 'next/link';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
 import { Routes } from '@/lib/routes';
+import { DBApplicantOrgInput, DBApplicantOrgInputSchema } from '@/lib/types/applicantOrg';
+import { parseZodError } from '@/lib/parseZodError';
 
 export default function CreateClient() {
   const [companyName, setCompanyName] = useState('');
@@ -17,26 +19,22 @@ export default function CreateClient() {
     e.preventDefault();
     setError('');
 
-    // Basic validation
-    if (!companyName || !contactName || !contactEmail) {
-      setError('All fields are required');
-      return;
-    }
+    // // Basic validation
+    // if (!companyName || !contactName || !contactEmail) {
+    //   setError('All fields are required');
+    //   return;
+    // }
 
-    if (companyName.length > 255) {
-      setError('Company name must be 255 characters or less');
-      return;
-    }
+    const apiData: DBApplicantOrgInput = {
+      company_name: companyName,
+      primary_contact_name: contactName,
+      primary_contact_email: contactEmail,
+    };
 
-    if (contactName.length > 255) {
-      setError('Contact name must be 255 characters or less');
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(contactEmail)) {
-      setError('Please enter a valid email address');
+    const result = DBApplicantOrgInputSchema.safeParse(apiData);
+    console.log(result);
+    if (!result.success) {
+      setError(parseZodError(result.error));
       return;
     }
 
@@ -57,8 +55,6 @@ export default function CreateClient() {
       //   body: JSON.stringify({ companyName, contactName, contactEmail }),
       // });
 
-      alert('Client created successfully! (Check console for details)');
-
       // Reset form
       setCompanyName('');
       setContactName('');
@@ -73,7 +69,7 @@ export default function CreateClient() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto">
+      <div className="max-w-xl mx-auto">
         {/* Back button in top left */}
         <div className="mb-8">
           <Link
@@ -104,7 +100,6 @@ export default function CreateClient() {
                 id="companyName"
                 name="companyName"
                 type="text"
-                required
                 placeholder="Company Name"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
@@ -116,7 +111,6 @@ export default function CreateClient() {
                 id="contactName"
                 name="contactName"
                 type="text"
-                required
                 placeholder="Contact Name"
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
@@ -128,7 +122,6 @@ export default function CreateClient() {
                 id="contactEmail"
                 name="contactEmail"
                 type="email"
-                required
                 placeholder="Contact Email"
                 value={contactEmail}
                 onChange={(e) => setContactEmail(e.target.value)}
@@ -137,21 +130,12 @@ export default function CreateClient() {
             </div>
 
             {/* Action buttons */}
-            <div className="flex space-x-4 pt-4">
-            <BaseButton
-                type="button"
-                variant="secondary"
-                href={Routes.ADMIN}
-                className="flex-1"
-              >
-                Cancel
-              </BaseButton>
-
+            <div className="flex flex-col-reverse sm:flex-row space-x-4 pt-4">
               <BaseButton
                 type="submit"
                 variant="primary"
                 loading={isLoading}
-                className="flex-1"
+                className="flex-1 mb-6 sm:mb-0"
               >
                 {isLoading ? 'Creating...' : 'Create Client'}
               </BaseButton>

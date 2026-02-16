@@ -1,9 +1,9 @@
 import z from 'zod';
 
 export const DBApplicantOrgInputSchema = z.object({
-  company_name: z.string().min(1).max(255),
-  primary_contact_name: z.string().min(1).max(255),
-  primary_contact_email: z.email(),
+  company_name: z.string().min(2, { message: 'Company name must be at least 2 characters' }).max(255, { message: 'Company name is too long' }),
+  primary_contact_name: z.string().min(2, { message: 'Contact name must be at least 2 characters' }).max(255, { message: 'Contact name is too long' }),
+  primary_contact_email: z.email({ message: 'Please enter a valid email address' }),
 });
 
 export type DBApplicantOrgInput = z.infer<typeof DBApplicantOrgInputSchema>;
