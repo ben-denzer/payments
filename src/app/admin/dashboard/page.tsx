@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import BaseButton from '@/components/BaseButton';
+import ClientList from '@/components/ClientList';
 import { User } from '@/lib/types/user';
 import { checkAuth } from '@/lib/checkAuth';
 import { ApiRoutes, Routes } from '@/lib/routes';
@@ -83,7 +84,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-screen mx-auto">
         <div className="bg-white shadow rounded-lg p-6">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -92,57 +93,41 @@ export default function Dashboard() {
             <p className="text-gray-600">Welcome to your personal dashboard!</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-blue-900 mb-2">
-                Account Information
-              </h2>
-              <div className="space-y-2">
-                <p className="text-blue-800">
-                  <span className="font-medium">Email:</span> {user.email}
-                </p>
-                <p className="text-blue-800">
-                  <span className="font-medium">User ID:</span> {user.id}
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-green-900 mb-2">
-                Quick Actions
-              </h2>
-              <div className="space-y-3">
-                <BaseButton
-                  variant="success"
-                  fullWidth
-                  href={Routes.CREATE_CLIENT}
-                >
-                  Create New Client
-                </BaseButton>
-                <p className="text-sm text-green-700">
-                  You are successfully logged in! This page is only accessible
-                  to authenticated users.
-                </p>
-              </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-semibold text-blue-900 mb-2">
+              Account Information
+            </h2>
+            <div className="space-y-2">
+              <p className="text-blue-800">
+                <span className="font-medium">Email:</span> {user.email}
+              </p>
+              <p className="text-blue-800">
+                <span className="font-medium">User ID:</span> {user.id}
+              </p>
             </div>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-yellow-900 mb-2">
-              Development Notes
-            </h2>
-            <ul className="text-yellow-800 space-y-1 text-sm">
-              <li>• This is a protected page that requires authentication</li>
-              <li>
-                • Unauthenticated users are automatically redirected to login
-              </li>
-              <li>
-                • Authentication is handled via HTTP-only cookies and JWT tokens
-              </li>
-              <li>
-                • You can extend this dashboard with more features as needed
-              </li>
-            </ul>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Recent Clients
+              </h2>
+              <div className="flex space-x-3">
+                <BaseButton
+                  variant="success"
+                  href={Routes.CREATE_CLIENT}
+                >
+                  New Client
+                </BaseButton>
+                <BaseButton
+                  variant="secondary"
+                  href={Routes.CLIENTS}
+                >
+                  View All
+                </BaseButton>
+              </div>
+            </div>
+            {clientList && <ClientList clients={clientList} />}
           </div>
         </div>
       </div>
