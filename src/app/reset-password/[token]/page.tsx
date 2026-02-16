@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import AuthForm from '@/components/AuthForm';
 import BaseInput from '@/components/BaseInput';
+import { ApiRoutes, Routes } from '@/lib/routes';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -59,7 +60,7 @@ export default function ResetPassword() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
+      const response = await fetch(ApiRoutes.RESET_PASSWORD, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ export default function ResetPassword() {
         setSuccess(true);
         // Redirect to login after a delay
         setTimeout(() => {
-          router.push('/login');
+          router.push(Routes.LOGIN);
         }, 3000);
       } else {
         setError(data.error || 'Failed to reset password');

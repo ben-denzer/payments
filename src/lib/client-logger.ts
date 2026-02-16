@@ -1,6 +1,8 @@
 // Client-side logger utility that sends logs to the server
 // This avoids exposing New Relic API keys to the client
 
+import { ApiRoutes } from "./routes";
+
 interface LogData {
   message?: string;
   error?: string | Error;
@@ -45,7 +47,7 @@ class ClientLogger {
         payload.message = data.message;
       }
 
-      const response = await fetch('/api/logger', {
+      const response = await fetch(ApiRoutes.LOGGER, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),

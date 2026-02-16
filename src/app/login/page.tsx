@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import AuthForm from '@/components/AuthForm';
 import BaseInput from '@/components/BaseInput';
 import { checkAuth } from '@/lib/checkAuth';
+import { ApiRoutes, Routes } from '@/lib/routes';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export default function Login() {
     const checkAuthEffect = async () => {
       const user = await checkAuth('generic');
       if (user) {
-        router.push('/dashboard');
+        router.push(Routes.DASHBOARD_ROUTER);
       }
       setIsCheckingAuth(false);
     };
@@ -41,7 +42,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(ApiRoutes.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/dashboard'); // Redirect to dashboard after successful login
+        router.push(Routes.DASHBOARD_ROUTER); // Redirect to dashboard after successful login
       } else {
         setError(data.error || 'Login failed');
       }
@@ -88,7 +89,7 @@ export default function Login() {
       submitButtonLoadingText="Signing in..."
       isLoading={isLoading}
       footerLinks={[
-        { text: 'Forgot your password?', href: '/forgot-password' }
+        { text: 'Forgot your password?', href: Routes.FORGOT_PASSWORD }
       ]}
     >
       <div className="rounded-md shadow-sm -space-y-px">

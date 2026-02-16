@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import BaseButton from './BaseButton';
 import { checkAuth } from '@/lib/checkAuth';
+import { ApiRoutes, Routes } from '@/lib/routes';
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,12 +32,12 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch(ApiRoutes.LOGOUT, {
         method: 'POST',
         credentials: 'include',
       });
       setIsLoggedIn(false);
-      window.location.href = '/'; // Redirect to home
+      window.location.href = Routes.HOME;
     } catch (error) {
       console.error('Logout failed:', error);
     }

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import BaseButton from '@/components/BaseButton';
 import { User } from '@/lib/types/user';
 import { checkAuth } from "@/lib/checkAuth";
+import { Routes } from "@/lib/routes";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
@@ -76,7 +77,7 @@ export default function Home() {
               variant="primary"
               shape="pill"
               size="lg"
-              href="/dashboard"
+              href={Routes.DASHBOARD_ROUTER}
               className="md:w-[158px]"
             >
               Go to Dashboard
@@ -87,7 +88,7 @@ export default function Home() {
                 variant="secondary"
                 shape="pill"
                 size="lg"
-                href="/login"
+                href={Routes.LOGIN}
                 className="md:w-[158px]"
               >
                 Log In

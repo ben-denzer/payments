@@ -1,11 +1,11 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+'use server';
 import { verifyJWT } from '@/lib/auth';
 import { AUTH_COOKIE_NAME } from '@/lib/constants';
 import { Routes } from '@/lib/routes';
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation';
 
-export default async function DashboardPage() {
-  // Check for auth cookie
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
 
@@ -13,14 +13,16 @@ export default async function DashboardPage() {
     redirect(Routes.LOGIN);
   }
 
-  // Verify JWT token
   const payload = await verifyJWT(token);
   if (!payload) {
     redirect(Routes.LOGIN);
   }
 
-  // Check if user is admin
-  const isAdmin = payload.isAdmin;
+  if (!payload.isAdmin) {
+    redirect(Routes.APPLICANT);
+  }
 
-  redirect(isAdmin ? Routes.ADMIN : Routes.APPLICANT);
+  return (
+    <>{children}</>
+  )
 }

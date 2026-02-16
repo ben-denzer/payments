@@ -1,10 +1,11 @@
 'use client';
 
 import { User, UserSchema } from "./types/user";
+import { ApiRoutes } from "./routes";
 
 export async function checkAuth(type: 'admin' | 'applicant' | 'owner' | 'generic'): Promise<User | null> {
   try {
-    const response = await fetch('/api/auth/me', {
+    const response = await fetch(ApiRoutes.ME, {
       credentials: 'include',
     });
     if (response.ok) {

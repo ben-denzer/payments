@@ -6,6 +6,7 @@ import Link from 'next/link';
 import AuthForm from '@/components/AuthForm';
 import BaseInput from '@/components/BaseInput';
 import { checkAuth } from '@/lib/checkAuth';
+import { ApiRoutes, Routes } from '@/lib/routes';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ export default function ForgotPassword() {
     const checkAuthEffect = async () => {
       const user = await checkAuth('generic');
       if (user) {
-        router.push('/dashboard');
+        router.push(Routes.DASHBOARD_ROUTER);
       }
       setIsCheckingAuth(false);
     };
@@ -48,7 +49,7 @@ export default function ForgotPassword() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await fetch(ApiRoutes.FORGOT_PASSWORD, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ export default function ForgotPassword() {
           </div>
           <div className="text-center">
             <Link
-              href="/login"
+              href={Routes.LOGIN}
               className="font-medium text-blue-600 hover:text-blue-500"
             >
               Back to sign in
@@ -120,7 +121,7 @@ export default function ForgotPassword() {
       submitButtonLoadingText="Sending reset link..."
       isLoading={isLoading}
       footerLinks={[
-        { text: 'Back to sign in', href: '/login' }
+        { text: 'Back to sign in', href: Routes.LOGIN }
       ]}
     >
       <BaseInput

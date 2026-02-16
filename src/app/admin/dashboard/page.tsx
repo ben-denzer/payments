@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import BaseButton from '@/components/BaseButton';
 import { User } from '@/lib/types/user';
 import { checkAuth } from '@/lib/checkAuth';
+import { Routes } from '@/lib/routes';
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -18,7 +19,7 @@ export default function Dashboard() {
       if (user) {
         setUser(user);
       } else {
-        router.push('/login');
+        router.push(Routes.LOGIN);
       }
       setIsLoading(false);
     };

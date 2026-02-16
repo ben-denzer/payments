@@ -6,6 +6,7 @@ import AuthForm from '@/components/AuthForm';
 import BaseInput from '@/components/BaseInput';
 import { MIN_PASSWORD_LENGTH } from '@/lib/constants';
 import { checkAuth } from '@/lib/checkAuth';
+import { ApiRoutes, Routes } from '@/lib/routes';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ export default function SignUp() {
     const checkAuthEffect = async () => {
       const user = await checkAuth('generic');
       if (user) {
-        router.push('/dashboard');
+        router.push(Routes.DASHBOARD_ROUTER);
       }
       setIsCheckingAuth(false);
     };
@@ -59,7 +60,7 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(ApiRoutes.SIGNUP, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +72,7 @@ export default function SignUp() {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/dashboard'); // Redirect to dashboard after successful signup
+        router.push(Routes.DASHBOARD_ROUTER); // Redirect to dashboard after successful signup
       } else {
         setError(data.error || 'Sign up failed');
       }
