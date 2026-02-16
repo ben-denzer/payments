@@ -70,3 +70,8 @@ export const mapDBApplicantOrgToApplicantOrg = (
     updatedAt: new Date(dbApplicantOrg.updated_at).toISOString(),
   };
 };
+
+export const GetClientRequestSchema = z.object({
+  clientID: z.number(),
+});
+export type GetClientRequest = z.infer<typeof GetClientRequestSchema>;

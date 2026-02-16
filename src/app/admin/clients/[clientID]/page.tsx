@@ -10,9 +10,10 @@ import { ApiRoutes, Routes } from '@/lib/routes';
 import { ClientLogger } from '@/lib/client-logger';
 import {
   ApplicantOrg,
-  ApplicantOrgList,
-  ApplicantOrgListSchema,
+  ApplicantOrgSchema,
   ApplicantOrgStatus,
+  GetClientRequest,
+  GetClientRequestSchema,
 } from '@/lib/types/applicantOrg';
 
 const logger = new ClientLogger();
@@ -47,6 +48,7 @@ const statusOptions: ApplicantOrgStatus[] = [
 export default function ClientDetailPage() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isClientLoading, setIsClientLoading] = useState(false);
   const [client, setClient] = useState<ApplicantOrg | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedClient, setEditedClient] = useState<Partial<ApplicantOrg>>({});
@@ -71,42 +73,53 @@ export default function ClientDetailPage() {
     });
   }, [router]);
 
-  const getClientList = useCallback(async () => {
+  const getClient = useCallback(async () => {
     try {
-      const response = await fetch(ApiRoutes.GET_CLIENT_LIST, {
+      setIsClientLoading(true);
+      const apiData: GetClientRequest = {
+        clientID: parseInt(clientID),
+      };
+
+      const result = GetClientRequestSchema.safeParse(apiData);
+      if (!result.success) {
+        logger.error(new Error('Invalid request data'), 'Get Client', { apiData });
+        return;
+      }
+
+      const response = await fetch(ApiRoutes.GET_CLIENT, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         credentials: 'include',
+        body: JSON.stringify({ clientID: parseInt(clientID) }),
       });
       if (!response.ok) {
-        throw new Error('Failed to get client list');
+        throw new Error('Failed to get client');
       }
-      const data: { message: string; clientList: ApplicantOrgList } =
+      const data: { message: string; client: ApplicantOrg } =
         await response.json();
-      ApplicantOrgListSchema.parse(data.clientList);
+      ApplicantOrgSchema.parse(data.client);
 
-      // Find the specific client by ID
-      const foundClient = data.clientList.find(
-        (c) => c.id === parseInt(clientID),
-      );
-      if (foundClient) {
-        setClient(foundClient);
-        setEditedClient({
-          companyName: foundClient.companyName,
-          primaryContactName: foundClient.primaryContactName,
-          primaryContactEmail: foundClient.primaryContactEmail,
-          status: foundClient.status,
-        });
-      }
+      setClient(data.client);
+      setEditedClient({
+        companyName: data.client.companyName,
+        primaryContactName: data.client.primaryContactName,
+        primaryContactEmail: data.client.primaryContactEmail,
+        status: data.client.status,
+      });
     } catch (e) {
       logger.error(e, 'Failed to get client details');
+    } finally {
+      setIsClientLoading(false);
     }
   }, [clientID]);
 
   useEffect(() => {
     if (user && clientID) {
-      getClientList();
+      getClient();
     }
-  }, [user, clientID, getClientList]);
+  }, [user, clientID, getClient]);
 
   const handleEditClick = () => {
     setIsEditMode(true);
@@ -114,14 +127,12 @@ export default function ClientDetailPage() {
 
   const handleCancelClick = () => {
     setIsEditMode(false);
-    if (client) {
-      setEditedClient({
-        companyName: client.companyName,
-        primaryContactName: client.primaryContactName,
-        primaryContactEmail: client.primaryContactEmail,
-        status: client.status,
-      });
-    }
+    setEditedClient({
+      companyName: client!.companyName,
+      primaryContactName: client!.primaryContactName,
+      primaryContactEmail: client!.primaryContactEmail,
+      status: client!.status,
+    });
   };
 
   const handleSaveClick = () => {
@@ -160,7 +171,23 @@ export default function ClientDetailPage() {
     return null; // Will redirect in useEffect
   }
 
-  if (!client) {
+  if (isClientLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Loading Client...
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isClientLoading && !client) {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -197,7 +224,7 @@ export default function ClientDetailPage() {
                 ← Clients
               </BaseButton>
               <h1 className="text-3xl font-bold text-gray-900">
-                {client.companyName}
+                {client!.companyName}
               </h1>
             </div>
             <div className="flex space-x-3">
@@ -239,7 +266,7 @@ export default function ClientDetailPage() {
                   maxLength={255}
                 />
               ) : (
-                <p className="text-lg text-gray-900">{client.companyName}</p>
+                <p className="text-lg text-gray-900">{client!.companyName}</p>
               )}
             </div>
 
@@ -263,7 +290,7 @@ export default function ClientDetailPage() {
                 />
               ) : (
                 <p className="text-lg text-gray-900">
-                  {client.primaryContactName}
+                  {client!.primaryContactName}
                 </p>
               )}
             </div>
@@ -287,7 +314,7 @@ export default function ClientDetailPage() {
                 />
               ) : (
                 <p className="text-lg text-gray-900">
-                  {client.primaryContactEmail}
+                  {client!.primaryContactEmail}
                 </p>
               )}
             </div>
@@ -299,7 +326,7 @@ export default function ClientDetailPage() {
               </label>
               {isEditMode ? (
                 <select
-                  value={editedClient.status || client.status}
+                  value={editedClient.status || client!.status}
                   onChange={(e) =>
                     setEditedClient((prev) => ({
                       ...prev,
@@ -316,9 +343,9 @@ export default function ClientDetailPage() {
                 </select>
               ) : (
                 <span
-                  className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${statusColors[client.status]}`}
+                  className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${statusColors[client!.status]}`}
                 >
-                  {statusLabels[client.status]}
+                  {statusLabels[client!.status]}
                 </span>
               )}
             </div>
@@ -328,7 +355,7 @@ export default function ClientDetailPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Created
               </label>
-              <p className="text-gray-600">{formatDate(client.createdAt)}</p>
+              <p className="text-gray-600">{formatDate(client!.createdAt)}</p>
             </div>
 
             {/* Updated At */}
@@ -336,7 +363,7 @@ export default function ClientDetailPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Last Updated
               </label>
-              <p className="text-gray-600">{formatDate(client.updatedAt)}</p>
+              <p className="text-gray-600">{formatDate(client!.updatedAt)}</p>
             </div>
           </div>
         </div>
