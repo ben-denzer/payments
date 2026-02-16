@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logErrorWithMetadata, logInfoWithMetadata } from '@/lib/logger';
+import { logError, logInfo } from '@/lib/logger';
 
 // Rate limiting store (in production, use Redis or similar)
 const rateLimit = new Map<string, { count: number; resetTime: number }>();
@@ -118,11 +118,11 @@ export async function POST(request: NextRequest) {
     const logMetadata = (metadata && typeof metadata === 'object') ? metadata : {};
 
     if (level === 'ERROR') {
-      logErrorWithMetadata(error, logContext, logMetadata);
+      logError(error, logContext, logMetadata);
     } else {
       // For INFO and WARN, use the message
       const fullMessage = level === 'WARN' ? `Warning: ${message}` : message;
-      logInfoWithMetadata(fullMessage, logContext, logMetadata);
+      logInfo(fullMessage, logContext, logMetadata);
     }
 
     return NextResponse.json(
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     // Log server-side errors
-    logErrorWithMetadata(error, 'Logger API Error', {});
+    logError(error, 'Logger API Error', {});
 
     return NextResponse.json(
       { error: 'Internal server error' },

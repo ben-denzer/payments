@@ -86,22 +86,16 @@ This application supports comprehensive logging for both client-side and server-
 ### Server-Side Logging
 
 ```typescript
-import { logError, logInfo, logErrorWithMetadata, logInfoWithMetadata } from '@/lib/logger';
-
-// Log errors
-logError(new Error('Database connection failed'), 'Database');
-
-// Log info messages
-logInfo('User authentication successful', 'Auth Service');
+import { logError, logInfo } from '@/lib/logger';
 
 // Log with metadata
-logErrorWithMetadata('Payment processing failed', 'Payment Gateway', {
+logError('Payment processing failed', 'Payment Gateway', {
   userId: 12345,
   amount: 99.99,
   currency: 'USD'
 });
 
-logInfoWithMetadata('Cache cleared successfully', 'Cache Manager', {
+logInfo('Cache cleared successfully', 'Cache Manager', {
   cacheSize: 1024,
   duration: 150
 });

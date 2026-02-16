@@ -4,13 +4,8 @@ import { executeQuerySingle } from '@/lib/db';
 import { logError } from '@/lib/logger';
 import { DBUser, User, UserSchema } from '@/lib/types/user';
 import { AUTH_COOKIE_CONFIG, AUTH_COOKIE_NAME } from '@/lib/constants';
+import { AuthError } from '@/lib/types/AuthError';
 
-class AuthError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'AuthError';
-  }
-}
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
