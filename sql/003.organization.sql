@@ -31,3 +31,5 @@ CREATE TABLE IF NOT EXISTS files (
 CREATE INDEX idx_files_applicant_org_id ON files(applicant_org_id);
 CREATE INDEX idx_files_type ON files(file_category);
 CREATE INDEX idx_files_created_at ON files(created_at);
+
+ALTER TABLE applicant_org ADD COLUMN storage_bucket_base VARCHAR(25) NOT NULL;

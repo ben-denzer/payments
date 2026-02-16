@@ -5,8 +5,13 @@ import Link from 'next/link';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
 import { ApiRoutes, Routes } from '@/lib/routes';
-import { DBApplicantOrgInput, DBApplicantOrgInputSchema } from '@/lib/types/applicantOrg';
+import {
+  DBApplicantOrgInput,
+  DBApplicantOrgInputSchema,
+} from '@/lib/types/applicantOrg';
 import { parseZodError } from '@/lib/parseZodError';
+
+const isProd = process.env.NEXT_PUBLIC_APP_ENV === 'production';
 
 export default function CreateClient() {
   const [companyName, setCompanyName] = useState('');
@@ -19,10 +24,16 @@ export default function CreateClient() {
     e.preventDefault();
     setError('');
 
+    const storageBucketBase = `${isProd ? '' : 'test'}-${companyName
+      .toLowerCase()
+      .replace(/[^A-Za-z0-9]/g, '-')
+      .slice(0, 15)}`;
+
     const apiData: DBApplicantOrgInput = {
       company_name: companyName,
       primary_contact_name: contactName,
       primary_contact_email: contactEmail,
+      storage_bucket_base: storageBucketBase,
     };
 
     const result = DBApplicantOrgInputSchema.safeParse(apiData);
@@ -49,13 +60,12 @@ export default function CreateClient() {
       }
 
       const data = await response.json();
-      console.log('success',data);
+      console.log('success', data);
 
       // Reset form
       setCompanyName('');
       setContactName('');
       setContactEmail('');
-
     } catch {
       setError('Failed to create client. Please try again.');
     } finally {
