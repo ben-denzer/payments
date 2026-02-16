@@ -10,6 +10,9 @@ import {
   DBApplicantOrgInputSchema,
 } from '@/lib/types/applicantOrg';
 import { parseZodError } from '@/lib/parseZodError';
+import { ClientLogger } from '@/lib/client-logger';
+import { useRouter } from 'next/navigation';
+const logger = new ClientLogger();
 
 const isProd = process.env.NEXT_PUBLIC_APP_ENV === 'production';
 
@@ -19,7 +22,7 @@ export default function CreateClient() {
   const [contactEmail, setContactEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -37,7 +40,6 @@ export default function CreateClient() {
     };
 
     const result = DBApplicantOrgInputSchema.safeParse(apiData);
-    console.log(result);
     if (!result.success) {
       setError(parseZodError(result.error));
       return;
@@ -60,13 +62,17 @@ export default function CreateClient() {
       }
 
       const data = await response.json();
-      console.log('success', data);
+      console.log(data);
+      if (data.orgId) {
+        router.push(`${Routes.CLIENTS}/${data.orgId}`);
+      }
 
       // Reset form
       setCompanyName('');
       setContactName('');
       setContactEmail('');
-    } catch {
+    } catch (e) {
+      logger.error(e, 'Failed to create client', { apiData });
       setError('Failed to create client. Please try again.');
     } finally {
       setIsLoading(false);

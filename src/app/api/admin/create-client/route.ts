@@ -14,7 +14,9 @@ const ROUTE_NAME = 'Create Client API';
 
 export async function POST(
   request: NextRequest,
-): Promise<NextResponse<{ message: string } | { error: string }>> {
+): Promise<
+  NextResponse<{ message: string; orgId: string } | { error: string }>
+> {
   try {
     logInfo('Creating client', ROUTE_NAME);
     await validateAdmin(await cookies(), ROUTE_NAME);
@@ -42,7 +44,7 @@ export async function POST(
     logInfo('Success. Client created', ROUTE_NAME);
 
     return NextResponse.json(
-      { message: applicantOrg.toString() },
+      { message: 'success', orgId: applicantOrg.toString() },
       { status: 200 },
     );
   } catch (e) {

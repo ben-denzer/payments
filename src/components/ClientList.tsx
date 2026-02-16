@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ApplicantOrg, ApplicantOrgStatus } from '@/lib/types/applicantOrg';
+import { Routes } from '@/lib/routes';
 
 interface ClientListProps {
   clients: ApplicantOrg[];
@@ -45,7 +46,7 @@ export default function ClientList({ clients }: ClientListProps) {
   };
 
   const handleRowClick = (clientId: number) => {
-    router.push(`/client/${clientId}`);
+    router.push(`${Routes.CLIENTS}/${clientId}`);
   };
 
   return (

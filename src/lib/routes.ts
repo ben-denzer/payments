@@ -4,7 +4,7 @@ export enum Routes {
   ADMIN = '/admin/dashboard',
   APPLICANT = '/applicant/dashboard',
   CREATE_CLIENT = '/admin/create-client',
-  CLIENTS = '/clients',
+  CLIENTS = '/admin/clients',
   LOGIN = '/login',
   DASHBOARD_ROUTER = '/dashboard',
 }
