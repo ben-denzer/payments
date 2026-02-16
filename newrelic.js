@@ -10,7 +10,7 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name: ['round-robin'],
+  app_name: ['payments'],
   /**
    * Your New Relic license key.
    */
@@ -35,6 +35,12 @@ exports.config = {
    * Disable security agent to avoid compatibility issues with Turbopack
    */
   security: {
+    enabled: false,
+  },
+  /**
+   * Disable browser monitoring
+   */
+  browser_monitoring: {
     enabled: false,
   },
 };

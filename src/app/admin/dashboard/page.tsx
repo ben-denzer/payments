@@ -75,9 +75,9 @@ export default function Dashboard() {
                 <BaseButton
                   variant="success"
                   fullWidth
-                  href="/"
+                  href={Routes.CREATE_CLIENT}
                 >
-                  Go to Home
+                  Create New Client
                 </BaseButton>
                 <p className="text-sm text-green-700">
                   You are successfully logged in! This page is only accessible to authenticated users.

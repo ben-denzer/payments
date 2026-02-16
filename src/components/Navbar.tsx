@@ -43,14 +43,16 @@ export default function Navbar() {
     }
   };
 
+  const homeLink = isLoggedIn ? Routes.DASHBOARD_ROUTER : Routes.HOME;
+
   if (isLoading) {
     return (
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
-                Round Robin
+              <Link href={homeLink} className="text-xl font-bold text-gray-900">
+                Payments 180
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -67,8 +69,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700">
-              Round Robin
+            <Link href={homeLink} className="text-xl font-bold text-gray-900 hover:text-gray-700">
+              Payments 180
             </Link>
           </div>
 
@@ -84,7 +86,7 @@ export default function Navbar() {
               <>
                 <BaseButton
                   variant="secondary"
-                  href="/login"
+                  href={Routes.LOGIN}
                 >
                   Log In
                 </BaseButton>

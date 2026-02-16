@@ -3,6 +3,7 @@ export enum Routes {
   FORGOT_PASSWORD = '/forgot-password',
   ADMIN = '/admin/dashboard',
   APPLICANT = '/applicant/dashboard',
+  CREATE_CLIENT = '/admin/create-client',
   LOGIN = '/login',
   DASHBOARD_ROUTER = '/dashboard',
 }
