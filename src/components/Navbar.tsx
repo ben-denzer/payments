@@ -6,19 +6,20 @@ import Link from 'next/link';
 import BaseButton from './BaseButton';
 import { checkAuth } from '@/lib/checkAuth';
 import { ApiRoutes, Routes } from '@/lib/routes';
+import { User } from '@/lib/types/user';
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
     const checkAuthEffect = async () => {
       const user = await checkAuth('generic');
       if (user) {
-        setIsLoggedIn(true);
+        setUser(user);
       } else {
-        setIsLoggedIn(false);
+        setUser(null);
       }
       setIsLoading(false);
     };
@@ -26,8 +27,6 @@ export default function Navbar() {
     checkAuthEffect().catch(() => {
       setIsLoading(false);
     });
-
-    checkAuthEffect();
   }, [pathname]); // Re-check auth status when route changes
 
   const handleLogout = async () => {
@@ -36,14 +35,14 @@ export default function Navbar() {
         method: 'POST',
         credentials: 'include',
       });
-      setIsLoggedIn(false);
+      setUser(null);
       window.location.href = Routes.HOME;
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
-  const homeLink = isLoggedIn ? Routes.DASHBOARD_ROUTER : Routes.HOME;
+  const homeLink = !user ? Routes.HOME : user.isAdmin ? Routes.ADMIN : Routes.APPLICANT;
 
   if (isLoading) {
     return (
@@ -75,7 +74,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            {isLoggedIn ? (
+            {user ? (
               <BaseButton
                 variant="danger"
                 onClick={handleLogout}
