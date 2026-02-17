@@ -15,8 +15,8 @@
     "setup": "npx simple-git-hooks"
   },
   "simple-git-hooks": {
-    "pre-commit": "echo 'pre-commit hook' && npx pretty-quick --staged",
-    "post-commit": "echo 'pre-push hook' && npm run check"
+    "pre-commit": "npx pretty-quick --staged",
+    "post-commit": "npm run check"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.990.0",
