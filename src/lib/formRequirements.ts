@@ -11,7 +11,7 @@ export enum Requirements {
   OTHER = 'OTHER',
 }
 
-export const RequirementsConfig: Record<
+export const requirementsConfig: Record<
   Requirements,
   {
     label: string;
