@@ -12,6 +12,10 @@
     "format": "prettier --write .",
     "test": "jest"
   },
+  "simple-git-hooks": {
+    "pre-commit": "npx pretty-quick --staged",
+    "pre-push": "npm run check"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.990.0",
     "bcryptjs": "^3.0.3",
@@ -40,6 +44,7 @@
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "prettier": "^3.8.1",
+    "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
