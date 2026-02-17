@@ -28,11 +28,9 @@ function validateOrigin(request: NextRequest): boolean {
   const referer = request.headers.get('referer');
 
   // Allow requests from our domain
-  const allowedOrigins = [
-    'http://localhost:3000',
-    'https://localhost:3000',
-    process.env.NEXT_PUBLIC_APP_URL,
-  ].filter(Boolean);
+  const allowedOrigins = ['http://localhost:3000', 'https://localhost:3000', process.env.NEXT_PUBLIC_APP_URL].filter(
+    Boolean,
+  );
 
   // Check origin header
   if (origin && allowedOrigins.includes(origin)) {
@@ -43,7 +41,7 @@ function validateOrigin(request: NextRequest): boolean {
   if (referer) {
     try {
       const refererUrl = new URL(referer);
-      if (allowedOrigins.some(allowed => refererUrl.origin === allowed)) {
+      if (allowedOrigins.some((allowed) => refererUrl.origin === allowed)) {
         return true;
       }
     } catch {
@@ -66,24 +64,16 @@ export async function POST(request: NextRequest) {
   try {
     // Get client IP for rate limiting
     const forwarded = request.headers.get('x-forwarded-for');
-    const clientIp = forwarded?.split(',')[0]?.trim() ||
-                    request.headers.get('x-real-ip') ||
-                    'unknown';
+    const clientIp = forwarded?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown';
 
     // Rate limiting
     if (isRateLimited(clientIp)) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded' },
-        { status: 429 }
-      );
+      return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
     }
 
     // Validate origin/domain/API key
     if (!validateOrigin(request)) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     // Parse request body
@@ -92,30 +82,21 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields based on log level
     if (level === 'ERROR' && !error) {
-      return NextResponse.json(
-        { error: 'Error message is required for ERROR level logs' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Error message is required for ERROR level logs' }, { status: 400 });
     }
 
     if ((level === 'INFO' || level === 'WARN') && !message) {
-      return NextResponse.json(
-        { error: 'Message is required for INFO/WARN level logs' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Message is required for INFO/WARN level logs' }, { status: 400 });
     }
 
     // Validate log level
     if (!['ERROR', 'WARN', 'INFO'].includes(level)) {
-      return NextResponse.json(
-        { error: 'Invalid log level. Must be ERROR, WARN, or INFO' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid log level. Must be ERROR, WARN, or INFO' }, { status: 400 });
     }
 
     // Log based on level
     const logContext = context || `Client ${level}`;
-    const logMetadata = (metadata && typeof metadata === 'object') ? metadata : {};
+    const logMetadata = metadata && typeof metadata === 'object' ? metadata : {};
 
     if (level === 'ERROR') {
       logError(error, logContext, logMetadata);
@@ -125,18 +106,11 @@ export async function POST(request: NextRequest) {
       logInfo(fullMessage, logContext, logMetadata);
     }
 
-    return NextResponse.json(
-      { success: true },
-      { status: 200 }
-    );
-
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     // Log server-side errors
     logError(error, 'Logger API Error', {});
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

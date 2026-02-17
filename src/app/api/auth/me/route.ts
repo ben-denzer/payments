@@ -11,10 +11,7 @@ export async function GET(request: NextRequest) {
     const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { error: 'No authentication token' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'No authentication token' }, { status: 401 });
     }
 
     // Verify JWT token
@@ -26,7 +23,7 @@ export async function GET(request: NextRequest) {
     // Get user data from database
     const user: Omit<DBUser, 'password_hash' | 'updated_at'> | null = await executeQuerySingle(
       'SELECT id, email, is_admin, is_owner, created_at FROM users WHERE id = ? AND is_owner = ? AND is_admin = ?',
-      [payload.id, !!payload.isOwner, !!payload.isAdmin]
+      [payload.id, !!payload.isOwner, !!payload.isAdmin],
     );
 
     if (!user) {
@@ -48,18 +45,12 @@ export async function GET(request: NextRequest) {
     console.error(error);
     logError(error, 'Auth check API');
     if (error instanceof AuthError) {
-      const response = NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
+      const response = NextResponse.json({ error: error.message }, { status: 401 });
 
       response.cookies.set(AUTH_COOKIE_NAME, '', AUTH_COOKIE_CONFIG('logout'));
 
       return response;
     }
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

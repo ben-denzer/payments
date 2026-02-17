@@ -5,7 +5,6 @@ import { JWTPayload, JWTPayloadSchema, User, UserSchema } from './types/user';
 const JWT_SECRET = process.env.JWT_SECRET!;
 const secret = new TextEncoder().encode(JWT_SECRET);
 
-
 // Password utilities
 export async function hashPassword(password: string): Promise<string> {
   const saltRounds = 12;

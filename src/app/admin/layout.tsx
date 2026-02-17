@@ -2,7 +2,7 @@
 import { verifyJWT } from '@/lib/auth';
 import { AUTH_COOKIE_NAME } from '@/lib/constants';
 import { Routes } from '@/lib/routes';
-import { cookies } from 'next/headers'
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +22,5 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect(Routes.APPLICANT);
   }
 
-  return (
-    <>{children}</>
-  )
+  return <>{children}</>;
 }

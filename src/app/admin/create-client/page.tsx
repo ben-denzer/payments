@@ -4,18 +4,11 @@ import { useState } from 'react';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
 import { ApiRoutes, Routes } from '@/lib/routes';
-import {
-  DBApplicantOrgInput,
-  DBApplicantOrgInputSchema,
-} from '@/lib/types/applicantOrg';
+import { DBApplicantOrgInput, DBApplicantOrgInputSchema } from '@/lib/types/applicantOrg';
 import { parseZodError } from '@/lib/parseZodError';
 import { ClientLogger } from '@/lib/client-logger';
 import { useRouter } from 'next/navigation';
-import {
-  DashboardContainer,
-  DashboardHeader,
-  DashboardTitle,
-} from '@/components/DashboardContainer';
+import { DashboardContainer, DashboardHeader, DashboardTitle } from '@/components/DashboardContainer';
 const logger = new ClientLogger();
 
 const isProd = process.env.NEXT_PUBLIC_APP_ENV === 'production';
@@ -89,27 +82,15 @@ export default function CreateClient() {
         <div className="flex items-center space-x-4">
           <div className="flex-col">
             <DashboardTitle>Create New Client</DashboardTitle>
-            <BaseButton
-              size="xs"
-              className="mt-2"
-              variant="secondary"
-              onClick={() => router.back()}
-            >
+            <BaseButton size="xs" className="mt-2" variant="secondary" onClick={() => router.back()}>
               ← Back
             </BaseButton>
           </div>
         </div>
       </DashboardHeader>
       {/* Form container */}
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg"
-      >
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-            {error}
-          </div>
-        )}
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg">
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">{error}</div>}
 
         <div className="space-y-4">
           <BaseInput
@@ -147,12 +128,7 @@ export default function CreateClient() {
 
         {/* Action buttons */}
         <div className="flex flex-col-reverse sm:flex-row space-x-4 pt-4">
-          <BaseButton
-            type="submit"
-            variant="primary"
-            loading={isLoading}
-            className="flex-1 mb-6 sm:mb-0"
-          >
+          <BaseButton type="submit" variant="primary" loading={isLoading} className="flex-1 mb-6 sm:mb-0">
             {isLoading ? 'Creating...' : 'Create Client'}
           </BaseButton>
         </div>

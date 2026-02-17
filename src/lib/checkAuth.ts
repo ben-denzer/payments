@@ -1,7 +1,7 @@
 'use client';
 
-import { User, UserSchema } from "./types/user";
-import { ApiRoutes } from "./routes";
+import { User, UserSchema } from './types/user';
+import { ApiRoutes } from './routes';
 
 export async function checkAuth(type: 'admin' | 'applicant' | 'owner' | 'generic'): Promise<User | null> {
   try {

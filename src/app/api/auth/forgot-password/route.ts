@@ -47,7 +47,7 @@ async function sendResetEmail(email: string, resetToken: string) {
     const response = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${auth}`,
+        Authorization: `Basic ${auth}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
@@ -77,32 +77,25 @@ export async function POST(request: NextRequest) {
 
     // Validate input
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
     }
 
     // Check if user exists (but don't reveal if they don't for security)
-    const user = await executeQuerySingle(
-      'SELECT id FROM users WHERE email = ?',
-      [email]
-    );
+    const user = await executeQuerySingle('SELECT id FROM users WHERE email = ?', [email]);
 
     // Always return success for security (don't reveal if email exists)
     if (!user) {
       return NextResponse.json(
-        { message: 'If an account with that email exists, a reset link has been sent.' },
-        { status: 200 }
+        {
+          message: 'If an account with that email exists, a reset link has been sent.',
+        },
+        { status: 200 },
       );
     }
 
@@ -115,17 +108,18 @@ export async function POST(request: NextRequest) {
     expiresAt.setHours(expiresAt.getHours() + 1);
 
     // Clean up expired tokens for this user
-    await executeQuerySingle(
-      'DELETE FROM password_reset_tokens WHERE user_id = ? AND expires_at < NOW()',
-      [user.id as number]
-    );
+    await executeQuerySingle('DELETE FROM password_reset_tokens WHERE user_id = ? AND expires_at < NOW()', [
+      user.id as number,
+    ]);
 
     // Insert new reset token
     const tokenId = randomBytes(16).toString('hex');
-    await executeInsert(
-      'INSERT INTO password_reset_tokens (id, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)',
-      [tokenId, user.id as number, tokenHash, expiresAt]
-    );
+    await executeInsert('INSERT INTO password_reset_tokens (id, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)', [
+      tokenId,
+      user.id as number,
+      tokenHash,
+      expiresAt,
+    ]);
 
     // Send reset email
     try {
@@ -136,14 +130,13 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { message: 'If an account with that email exists, a reset link has been sent.' },
-      { status: 200 }
+      {
+        message: 'If an account with that email exists, a reset link has been sent.',
+      },
+      { status: 200 },
     );
   } catch (error) {
     logError(error, 'Forgot password API');
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

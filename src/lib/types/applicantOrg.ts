@@ -56,9 +56,7 @@ export type ApplicantOrg = z.infer<typeof ApplicantOrgSchema>;
 export const ApplicantOrgListSchema = z.array(ApplicantOrgSchema);
 export type ApplicantOrgList = z.infer<typeof ApplicantOrgListSchema>;
 
-export const mapDBApplicantOrgToApplicantOrg = (
-  dbApplicantOrg: DBApplicantOrg,
-): ApplicantOrg => {
+export const mapDBApplicantOrgToApplicantOrg = (dbApplicantOrg: DBApplicantOrg): ApplicantOrg => {
   return {
     id: dbApplicantOrg.id,
     companyName: dbApplicantOrg.company_name,

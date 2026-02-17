@@ -21,9 +21,7 @@ const SERVICE_NAME = `payments-${process.env.NEXT_PUBLIC_APP_ENV || 'development
 export function isAuthError(error: unknown): boolean {
   if (!error) return false;
 
-  const errorMessage = typeof error === 'string' ? error :
-                      error instanceof Error ? error.message :
-                      String(error);
+  const errorMessage = typeof error === 'string' ? error : error instanceof Error ? error.message : String(error);
 
   const authErrorPatterns = [
     /invalid.*password/i,
@@ -33,20 +31,16 @@ export function isAuthError(error: unknown): boolean {
     /expired.*token/i,
     /unauthorized/i,
     /authentication.*failed/i,
-    /invalid.*credentials/i
+    /invalid.*credentials/i,
   ];
 
-  return authErrorPatterns.some(pattern => pattern.test(errorMessage));
+  return authErrorPatterns.some((pattern) => pattern.test(errorMessage));
 }
 
 /**
  * Logs an error with additional metadata
  */
-export function logError(
-  error: unknown,
-  context: string,
-  metadata?: Record<string, unknown>
-): void {
+export function logError(error: unknown, context: string, metadata?: Record<string, unknown>): void {
   // Skip logging authorization errors
   if (isAuthError(error)) {
     return;
@@ -62,13 +56,12 @@ export function logError(
   const fullMetadata: { [key: string]: string | number | boolean } = {
     context: `Error - ${context || 'Unknown'}`,
     service: SERVICE_NAME,
-    ...metadata
+    ...metadata,
   };
-
 
   let errorObj: Error;
   if (typeof error === 'string') {
-   errorObj = new Error(error);
+    errorObj = new Error(error);
   } else if (error instanceof Error) {
     errorObj = error;
   } else {
@@ -83,16 +76,12 @@ export function logError(
     context: context || 'Unknown',
     service: SERVICE_NAME,
     error: errorObj,
-    ...fullMetadata
+    ...fullMetadata,
   };
   newrelic.recordLogEvent(logEvent);
 }
 
-export function logInfo(
-  message: string,
-  context?: string,
-  metadata?: Record<string, unknown>
-): void {
+export function logInfo(message: string, context?: string, metadata?: Record<string, unknown>): void {
   // Skip if NewRelic is not available
   if (!newrelic) {
     console.info(`[${context}]`, message, metadata);
@@ -106,7 +95,7 @@ export function logInfo(
     timestamp: Date.now(),
     context,
     service: SERVICE_NAME,
-    ...metadata
+    ...metadata,
   };
 
   newrelic.recordLogEvent(logEvent);

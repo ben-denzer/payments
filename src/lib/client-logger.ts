@@ -42,8 +42,7 @@ class ClientLogger {
 
       // Handle different log types
       if (data.level === 'ERROR' || !data.level) {
-        payload.error =
-          data.error instanceof Error ? data.error.message : data.error;
+        payload.error = data.error instanceof Error ? data.error.message : data.error;
       } else {
         payload.message = data.message;
       }
@@ -68,11 +67,7 @@ class ClientLogger {
   /**
    * Log an error from the client side
    */
-  error(
-    e: string | Error | unknown,
-    context?: string,
-    metadata?: Record<string, unknown>,
-  ): void {
+  error(e: string | Error | unknown, context?: string, metadata?: Record<string, unknown>): void {
     const error = e instanceof Error ? e : new Error(String(e));
     this.sendLog({ error, level: 'ERROR', context, metadata });
   }
@@ -80,11 +75,7 @@ class ClientLogger {
   /**
    * Log a warning from the client side
    */
-  warn(
-    message: string,
-    context?: string,
-    metadata?: Record<string, unknown>,
-  ): void {
+  warn(message: string, context?: string, metadata?: Record<string, unknown>): void {
     this.sendLog({
       message,
       level: 'WARN',
@@ -96,11 +87,7 @@ class ClientLogger {
   /**
    * Log info from the client side
    */
-  info(
-    message: string,
-    context?: string,
-    metadata?: Record<string, unknown>,
-  ): void {
+  info(message: string, context?: string, metadata?: Record<string, unknown>): void {
     this.sendLog({
       message,
       level: 'INFO',

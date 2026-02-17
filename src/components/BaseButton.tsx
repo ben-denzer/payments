@@ -7,10 +7,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success';
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 type ButtonShape = 'rounded' | 'pill';
 
-interface BaseButtonProps extends Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  'className'
-> {
+interface BaseButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   shape?: ButtonShape;
@@ -23,8 +20,7 @@ interface BaseButtonProps extends Omit<
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-  secondary:
-    'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-blue-500',
+  secondary: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-blue-500',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
   success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
 };
@@ -68,11 +64,7 @@ export default function BaseButton({
   }
 
   return (
-    <button
-      className={combinedClassName}
-      disabled={disabled || loading}
-      {...props}
-    >
+    <button className={combinedClassName} disabled={disabled || loading} {...props}>
       {loading ? 'Loading...' : children}
     </button>
   );

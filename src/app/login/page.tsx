@@ -88,9 +88,7 @@ export default function Login() {
       submitButtonText="Sign in"
       submitButtonLoadingText="Signing in..."
       isLoading={isLoading}
-      footerLinks={[
-        { text: 'Forgot your password?', href: Routes.FORGOT_PASSWORD }
-      ]}
+      footerLinks={[{ text: 'Forgot your password?', href: Routes.FORGOT_PASSWORD }]}
     >
       <div className="rounded-md shadow-sm -space-y-px">
         <BaseInput

@@ -18,12 +18,7 @@ import {
   UpdateClientRequest,
   UpdateClientRequestSchema,
 } from '@/lib/types/applicantOrg';
-import {
-  DashboardContainer,
-  DashboardContent,
-  DashboardHeader,
-  DashboardTitle,
-} from '@/components/DashboardContainer';
+import { DashboardContainer, DashboardContent, DashboardHeader, DashboardTitle } from '@/components/DashboardContainer';
 
 const logger = new ClientLogger();
 
@@ -45,14 +40,7 @@ const statusLabels: Record<ApplicantOrgStatus, string> = {
   archived: 'Archived',
 };
 
-const statusOptions: ApplicantOrgStatus[] = [
-  'invited',
-  'in_progress',
-  'applied',
-  'approved',
-  'rejected',
-  'archived',
-];
+const statusOptions: ApplicantOrgStatus[] = ['invited', 'in_progress', 'applied', 'approved', 'rejected', 'archived'];
 
 export default function ClientDetailPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -111,8 +99,7 @@ export default function ClientDetailPage() {
       if (!response.ok) {
         throw new Error('Failed to get client');
       }
-      const data: { message: string; client: ApplicantOrg } =
-        await response.json();
+      const data: { message: string; client: ApplicantOrg } = await response.json();
       ApplicantOrgSchema.parse(data.client);
 
       setClient(data.client);
@@ -184,9 +171,7 @@ export default function ClientDetailPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(
-          errorData.error || 'Failed to update client. Please try again.',
-        );
+        setError(errorData.error || 'Failed to update client. Please try again.');
         return;
       }
 
@@ -234,9 +219,7 @@ export default function ClientDetailPage() {
     return (
       <DashboardContainer>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Loading Client...
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading Client...</h1>
         </div>
       </DashboardContainer>
     );
@@ -246,12 +229,8 @@ export default function ClientDetailPage() {
     return (
       <DashboardContainer>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Client Not Found
-          </h1>
-          <p className="text-gray-600 mt-2">
-            The requested client could not be found.
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Client Not Found</h1>
+          <p className="text-gray-600 mt-2">The requested client could not be found.</p>
           <BaseButton variant="primary" href={Routes.CLIENTS} className="mt-4">
             Clients
           </BaseButton>
@@ -267,12 +246,7 @@ export default function ClientDetailPage() {
           <div className="flex items-end space-x-4">
             <div className="flex-col">
               <DashboardTitle>{client!.companyName}</DashboardTitle>
-              <BaseButton
-                size="xs"
-                className="mt-2"
-                variant="secondary"
-                href={Routes.CLIENTS}
-              >
+              <BaseButton size="xs" className="mt-2" variant="secondary" href={Routes.CLIENTS}>
                 ← Clients
               </BaseButton>
             </div>
@@ -287,12 +261,7 @@ export default function ClientDetailPage() {
                 <BaseButton variant="secondary" onClick={handleCancelClick}>
                   Cancel
                 </BaseButton>
-                <BaseButton
-                  variant="success"
-                  onClick={handleSaveClick}
-                  loading={isSaving}
-                  disabled={isSaving}
-                >
+                <BaseButton variant="success" onClick={handleSaveClick} loading={isSaving} disabled={isSaving}>
                   {isSaving ? 'Saving...' : 'Save Changes'}
                 </BaseButton>
               </>
@@ -300,16 +269,10 @@ export default function ClientDetailPage() {
           </div>
         </DashboardHeader>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
-            {error}
-          </div>
-        )}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">{error}</div>}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md mb-6">
-            {success}
-          </div>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md mb-6">{success}</div>
         )}
 
         {/* Client Information */}
@@ -317,9 +280,7 @@ export default function ClientDetailPage() {
           <div className="space-y-6">
             {/* Company Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Company Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
               {isEditMode ? (
                 <BaseInput
                   type="text"
@@ -340,9 +301,7 @@ export default function ClientDetailPage() {
 
             {/* Primary Contact Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Primary Contact Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Primary Contact Name</label>
               {isEditMode ? (
                 <BaseInput
                   type="text"
@@ -357,17 +316,13 @@ export default function ClientDetailPage() {
                   maxLength={255}
                 />
               ) : (
-                <p className="text-lg text-gray-900">
-                  {client!.primaryContactName}
-                </p>
+                <p className="text-lg text-gray-900">{client!.primaryContactName}</p>
               )}
             </div>
 
             {/* Primary Contact Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Primary Contact Email
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Primary Contact Email</label>
               {isEditMode ? (
                 <BaseInput
                   type="email"
@@ -381,17 +336,13 @@ export default function ClientDetailPage() {
                   label="Primary Contact Email"
                 />
               ) : (
-                <p className="text-lg text-gray-900">
-                  {client!.primaryContactEmail}
-                </p>
+                <p className="text-lg text-gray-900">{client!.primaryContactEmail}</p>
               )}
             </div>
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Status
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
               {isEditMode ? (
                 <select
                   value={editedClient.status || client!.status}
@@ -420,17 +371,13 @@ export default function ClientDetailPage() {
 
             {/* Created At */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Created
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Created</label>
               <p className="text-gray-600">{formatDate(client!.createdAt)}</p>
             </div>
 
             {/* Updated At */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Last Updated
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Last Updated</label>
               <p className="text-gray-600">{formatDate(client!.updatedAt)}</p>
             </div>
           </div>

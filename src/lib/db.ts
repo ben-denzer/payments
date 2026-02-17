@@ -23,10 +23,7 @@ export function getPool(): mysql.Pool {
 }
 
 // Utility functions for database operations
-export async function executeQuery<T = Record<string, unknown>>(
-  query: string,
-  params: unknown[] = []
-): Promise<T[]> {
+export async function executeQuery<T = Record<string, unknown>>(query: string, params: unknown[] = []): Promise<T[]> {
   const connection = await getPool().getConnection();
   try {
     const [rows] = await connection.execute(query, params);
@@ -38,7 +35,7 @@ export async function executeQuery<T = Record<string, unknown>>(
 
 export async function executeQuerySingle<T = Record<string, unknown>>(
   query: string,
-  params: unknown[] = []
+  params: unknown[] = [],
 ): Promise<T | null> {
   const results = await executeQuery<T>(query, params);
   return results.length > 0 ? results[0] : null;

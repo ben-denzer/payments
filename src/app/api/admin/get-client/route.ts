@@ -17,9 +17,7 @@ const ROUTE_NAME = 'Get Single Client API';
 
 export async function POST(
   request: Request,
-): Promise<
-  NextResponse<{ message: string; client: ApplicantOrg } | { error: string }>
-> {
+): Promise<NextResponse<{ message: string; client: ApplicantOrg } | { error: string }>> {
   try {
     logInfo('Getting client', ROUTE_NAME);
     await validateAdmin(await cookies(), ROUTE_NAME);
@@ -37,15 +35,10 @@ export async function POST(
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     }
 
-    const frontendApplicantOrg = mapDBApplicantOrgToApplicantOrg(
-      applicantOrgResult[0],
-    );
+    const frontendApplicantOrg = mapDBApplicantOrgToApplicantOrg(applicantOrgResult[0]);
     ApplicantOrgSchema.parse(frontendApplicantOrg);
 
-    return NextResponse.json(
-      { message: 'success', client: frontendApplicantOrg },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: 'success', client: frontendApplicantOrg }, { status: 200 });
   } catch (e) {
     const error = e instanceof Error ? e : new Error(String(e));
     logError(error, ROUTE_NAME);
@@ -53,14 +46,8 @@ export async function POST(
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
     }
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

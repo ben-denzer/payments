@@ -8,16 +8,8 @@ import { User } from '@/lib/types/user';
 import { checkAuth } from '@/lib/checkAuth';
 import { ApiRoutes, Routes } from '@/lib/routes';
 import { ClientLogger } from '@/lib/client-logger';
-import {
-  ApplicantOrgList,
-  ApplicantOrgListSchema,
-} from '@/lib/types/applicantOrg';
-import {
-  DashboardContainer,
-  DashboardContent,
-  DashboardHeader,
-  DashboardTitle,
-} from '@/components/DashboardContainer';
+import { ApplicantOrgList, ApplicantOrgListSchema } from '@/lib/types/applicantOrg';
+import { DashboardContainer, DashboardContent, DashboardHeader, DashboardTitle } from '@/components/DashboardContainer';
 const logger = new ClientLogger();
 
 export default function AdminDashboard() {
@@ -52,8 +44,7 @@ export default function AdminDashboard() {
       if (!response.ok) {
         throw new Error('Failed to get client list');
       }
-      const data: { message: string; clientList: ApplicantOrgList } =
-        await response.json();
+      const data: { message: string; clientList: ApplicantOrgList } = await response.json();
       ApplicantOrgListSchema.parse(data.clientList);
       setClientList(data.clientList);
     } catch (e) {
@@ -72,9 +63,7 @@ export default function AdminDashboard() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white shadow rounded-lg p-6">
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Loading...
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h1>
             </div>
           </div>
         </div>
@@ -95,9 +84,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col space-y-6">
         <DashboardContent>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">
-              Recent Clients
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900">Recent Clients</h2>
             <div className="flex space-x-3">
               <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
                 New Client

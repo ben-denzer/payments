@@ -26,8 +26,7 @@ export const requirementsConfig: Record<
 > = {
   [Requirements.MERCHANT_APPLICATION]: {
     label: 'Merchant Application',
-    description:
-      'Download the application, fill out the form, sign it, then upload the signed application here',
+    description: 'Download the application, fill out the form, sign it, then upload the signed application here',
     type: 'file',
     requiredFileCount: 1,
     expectedFileCount: 1,
@@ -36,8 +35,7 @@ export const requirementsConfig: Record<
     label: 'Articles of Incorporation',
     description: '',
     type: 'file',
-    warningMessage:
-      'Articles of Incorporation are required for LLCs and Corporations',
+    warningMessage: 'Articles of Incorporation are required for LLCs and Corporations',
     userConfirmationText: 'This does not apply to me',
     requiredFileCount: 0,
     expectedFileCount: 1,

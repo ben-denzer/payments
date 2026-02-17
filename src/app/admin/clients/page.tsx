@@ -8,16 +8,8 @@ import { User } from '@/lib/types/user';
 import { checkAuth } from '@/lib/checkAuth';
 import { ApiRoutes, Routes } from '@/lib/routes';
 import { ClientLogger } from '@/lib/client-logger';
-import {
-  ApplicantOrgList,
-  ApplicantOrgListSchema,
-} from '@/lib/types/applicantOrg';
-import {
-  DashboardContainer,
-  DashboardContent,
-  DashboardHeader,
-  DashboardTitle,
-} from '@/components/DashboardContainer';
+import { ApplicantOrgList, ApplicantOrgListSchema } from '@/lib/types/applicantOrg';
+import { DashboardContainer, DashboardContent, DashboardHeader, DashboardTitle } from '@/components/DashboardContainer';
 const logger = new ClientLogger();
 
 export default function ClientsPage() {
@@ -52,8 +44,7 @@ export default function ClientsPage() {
       if (!response.ok) {
         throw new Error('Failed to get client list');
       }
-      const data: { message: string; clientList: ApplicantOrgList } =
-        await response.json();
+      const data: { message: string; clientList: ApplicantOrgList } = await response.json();
       ApplicantOrgListSchema.parse(data.clientList);
       setClientList(data.clientList);
     } catch (e) {
@@ -86,12 +77,7 @@ export default function ClientsPage() {
         <div className="flex items-end space-x-4">
           <div className="flex-col">
             <DashboardTitle>Clients</DashboardTitle>
-            <BaseButton
-              size="xs"
-              className="mt-2"
-              variant="secondary"
-              href={Routes.ADMIN}
-            >
+            <BaseButton size="xs" className="mt-2" variant="secondary" href={Routes.ADMIN}>
               ← Back
             </BaseButton>
           </div>
@@ -102,9 +88,7 @@ export default function ClientsPage() {
         </BaseButton>
       </DashboardHeader>
 
-      <DashboardContent>
-        {clientList && <ClientList clients={clientList} />}
-      </DashboardContent>
+      <DashboardContent>{clientList && <ClientList clients={clientList} />}</DashboardContent>
     </DashboardContainer>
   );
 }

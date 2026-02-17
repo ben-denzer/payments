@@ -75,18 +75,12 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             {user ? (
-              <BaseButton
-                variant="danger"
-                onClick={handleLogout}
-              >
+              <BaseButton variant="danger" onClick={handleLogout}>
                 Log Out
               </BaseButton>
             ) : (
               <>
-                <BaseButton
-                  variant="secondary"
-                  href={Routes.LOGIN}
-                >
+                <BaseButton variant="secondary" href={Routes.LOGIN}>
                   Log In
                 </BaseButton>
               </>

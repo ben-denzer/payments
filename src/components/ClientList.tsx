@@ -54,24 +54,12 @@ export default function ClientList({ clients }: ClientListProps) {
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Company
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Contact
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Email
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Created
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Updated
-            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -82,19 +70,13 @@ export default function ClientList({ clients }: ClientListProps) {
               onClick={() => handleRowClick(client.id)}
             >
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
-                  {client.companyName}
-                </div>
+                <div className="text-sm font-medium text-gray-900 truncate max-w-xs">{client.companyName}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900 truncate max-w-xs">
-                  {client.primaryContactName}
-                </div>
+                <div className="text-sm text-gray-900 truncate max-w-xs">{client.primaryContactName}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900 truncate max-w-xs">
-                  {client.primaryContactEmail}
-                </div>
+                <div className="text-sm text-gray-900 truncate max-w-xs">{client.primaryContactEmail}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span
@@ -104,14 +86,10 @@ export default function ClientList({ clients }: ClientListProps) {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {formatDate(client.createdAt)}
-                </div>
+                <div className="text-sm text-gray-500">{formatDate(client.createdAt)}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {formatDate(client.updatedAt)}
-                </div>
+                <div className="text-sm text-gray-500">{formatDate(client.updatedAt)}</div>
               </td>
             </tr>
           ))}

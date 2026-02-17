@@ -92,16 +92,17 @@ import { logError, logInfo } from '@/lib/logger';
 logError('Payment processing failed', 'Payment Gateway', {
   userId: 12345,
   amount: 99.99,
-  currency: 'USD'
+  currency: 'USD',
 });
 
 logInfo('Cache cleared successfully', 'Cache Manager', {
   cacheSize: 1024,
-  duration: 150
+  duration: 150,
 });
 ```
 
 ### Web Clients (Browser)
+
 Web clients automatically validate against allowed origins. No additional setup required:
 
 ```typescript
@@ -119,11 +120,12 @@ logClientInfo('User completed onboarding', 'User Journey');
 // Log with additional context
 logClientError(new Error('Network request failed'), 'API Call', {
   endpoint: '/api/users',
-  method: 'GET'
+  method: 'GET',
 });
 ```
 
 ### Mobile Apps & API Clients
+
 Mobile apps and other API clients must provide an API key:
 
 ```typescript
@@ -134,6 +136,7 @@ logger.error('Mobile app error', 'Mobile Context');
 ```
 
 ### Security Features
+
 - **Rate Limiting**: 10 requests per minute per IP
 - **Origin Validation**: Web clients must come from allowed domains
 - **API Key Authentication**: Mobile apps use API keys
@@ -141,6 +144,7 @@ logger.error('Mobile app error', 'Mobile Context');
 - **No Credentials**: Client requests don't send cookies/auth headers
 
 ### Environment Variables for Mobile/API Access
+
 ```env
 # Comma-separated list of valid API keys
 VALID_API_KEYS=mobile-app-key-1,web-api-key-2,ios-app-key-3

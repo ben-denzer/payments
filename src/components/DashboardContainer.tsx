@@ -10,12 +10,7 @@ export function DashboardContainer({
   maxWidth?: string;
 }) {
   return (
-    <div
-      className={cn(
-        'min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8',
-        className,
-      )}
-    >
+    <div className={cn('min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8', className)}>
       <div className={cn(maxWidth, 'mx-auto')}>
         <div className="bg-white shadow rounded-lg p-6">{children}</div>
       </div>
@@ -24,9 +19,7 @@ export function DashboardContainer({
 }
 
 export function DashboardHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-start justify-between mb-8">{children}</div>
-  );
+  return <div className="flex items-start justify-between mb-8">{children}</div>;
 }
 
 export function DashboardTitle({ children }: { children: React.ReactNode }) {
@@ -34,9 +27,5 @@ export function DashboardTitle({ children }: { children: React.ReactNode }) {
 }
 
 export function DashboardContent({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-      {children}
-    </div>
-  );
+  return <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">{children}</div>;
 }
