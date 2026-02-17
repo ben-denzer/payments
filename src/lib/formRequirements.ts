@@ -95,7 +95,7 @@ export const requirementsConfig: Record<
     label: 'Government issued ID',
     description: 'Back of the government issued ID.',
     type: 'file',
-    requiredFileCount: 1,
+    requiredFileCount: 0,
     expectedFileCount: 1,
   },
   [Requirements.OTHER]: {
