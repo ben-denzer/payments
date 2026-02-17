@@ -36,4 +36,6 @@ ALTER TABLE applicant_org ADD COLUMN storage_bucket_base VARCHAR(25) NOT NULL;
 
 ALTER TABLE applicant_org ADD COLUMN status VARCHAR(25) NOT NULL DEFAULT 'invited';
 
+ALTER TABLE files ADD COLUMN uploaded_by INT NOT NULL;
+
 CREATE INDEX idx_applicant_org_status ON applicant_org(status);

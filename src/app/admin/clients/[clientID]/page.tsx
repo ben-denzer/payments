@@ -391,7 +391,7 @@ export default function ClientDetailPage() {
         </DashboardContent>
         <DashboardContentSpacer />
         <DashboardContent>
-          <AdminRequirementCardsContainer />
+          <AdminRequirementCardsContainer key={clientID} clientID={clientID} />
         </DashboardContent>
       </DashboardContainer>
     </>
