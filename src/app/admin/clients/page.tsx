@@ -12,6 +12,12 @@ import {
   ApplicantOrgList,
   ApplicantOrgListSchema,
 } from '@/lib/types/applicantOrg';
+import {
+  DashboardContainer,
+  DashboardContent,
+  DashboardHeader,
+  DashboardTitle,
+} from '@/components/DashboardContainer';
 const logger = new ClientLogger();
 
 export default function ClientsPage() {
@@ -62,17 +68,11 @@ export default function ClientsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Loading...
-              </h1>
-            </div>
-          </div>
+      <DashboardContainer>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h1>
         </div>
-      </div>
+      </DashboardContainer>
     );
   }
 
@@ -81,23 +81,17 @@ export default function ClientsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-screen mx-auto">
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Clients
-            </h1>
-            <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
-              New Client
-            </BaseButton>
-          </div>
+    <DashboardContainer>
+      <DashboardHeader>
+        <DashboardTitle>Clients</DashboardTitle>
+        <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
+          New Client
+        </BaseButton>
+      </DashboardHeader>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-            {clientList && <ClientList clients={clientList} />}
-          </div>
-        </div>
-      </div>
-    </div>
+      <DashboardContent>
+        {clientList && <ClientList clients={clientList} />}
+      </DashboardContent>
+    </DashboardContainer>
   );
 }

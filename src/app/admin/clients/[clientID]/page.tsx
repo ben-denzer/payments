@@ -18,6 +18,12 @@ import {
   UpdateClientRequest,
   UpdateClientRequestSchema,
 } from '@/lib/types/applicantOrg';
+import {
+  DashboardContainer,
+  DashboardContent,
+  DashboardHeader,
+  DashboardTitle,
+} from '@/components/DashboardContainer';
 
 const logger = new ClientLogger();
 
@@ -88,7 +94,9 @@ export default function ClientDetailPage() {
 
       const result = GetClientRequestSchema.safeParse(apiData);
       if (!result.success) {
-        logger.error(new Error('Invalid request data'), 'Get Client', { apiData });
+        logger.error(new Error('Invalid request data'), 'Get Client', {
+          apiData,
+        });
         return;
       }
 
@@ -176,7 +184,9 @@ export default function ClientDetailPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.error || 'Failed to update client. Please try again.');
+        setError(
+          errorData.error || 'Failed to update client. Please try again.',
+        );
         return;
       }
 
@@ -208,17 +218,11 @@ export default function ClientDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Loading...
-              </h1>
-            </div>
-          </div>
+      <DashboardContainer>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h1>
         </div>
-      </div>
+      </DashboardContainer>
     );
   }
 
@@ -228,96 +232,81 @@ export default function ClientDetailPage() {
 
   if (isClientLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Loading Client...
-              </h1>
-            </div>
-          </div>
+      <DashboardContainer>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Loading Client...
+          </h1>
         </div>
-      </div>
+      </DashboardContainer>
     );
   }
 
   if (!isClientLoading && !client) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Client Not Found
-              </h1>
-              <p className="text-gray-600 mt-2">
-                The requested client could not be found.
-              </p>
-              <BaseButton
-                variant="primary"
-                href={Routes.CLIENTS}
-                className="mt-4"
-              >
-                Clients
-              </BaseButton>
-            </div>
-          </div>
+      <DashboardContainer>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Client Not Found
+          </h1>
+          <p className="text-gray-600 mt-2">
+            The requested client could not be found.
+          </p>
+          <BaseButton variant="primary" href={Routes.CLIENTS} className="mt-4">
+            Clients
+          </BaseButton>
         </div>
-      </div>
+      </DashboardContainer>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white shadow rounded-lg p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-4">
-              <BaseButton variant="secondary" href={Routes.CLIENTS}>
-                ← Clients
-              </BaseButton>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {client!.companyName}
-              </h1>
-            </div>
-            <div className="flex space-x-3">
-              {!isEditMode ? (
-                <BaseButton variant="primary" onClick={handleEditClick}>
-                  Edit Company Info
-                </BaseButton>
-              ) : (
-                <>
-                  <BaseButton variant="secondary" onClick={handleCancelClick}>
-                    Cancel
-                  </BaseButton>
-                  <BaseButton
-                    variant="success"
-                    onClick={handleSaveClick}
-                    loading={isSaving}
-                    disabled={isSaving}
-                  >
-                    {isSaving ? 'Saving...' : 'Save Changes'}
-                  </BaseButton>
-                </>
-              )}
-            </div>
+    <>
+      <DashboardContainer>
+        <DashboardHeader>
+          <div className="flex items-center space-x-4">
+            <BaseButton variant="secondary" href={Routes.CLIENTS}>
+              ← Clients
+            </BaseButton>
+            <DashboardTitle>{client!.companyName}</DashboardTitle>
           </div>
+          <div className="flex space-x-3">
+            {!isEditMode ? (
+              <BaseButton variant="primary" onClick={handleEditClick}>
+                Edit Company Info
+              </BaseButton>
+            ) : (
+              <>
+                <BaseButton variant="secondary" onClick={handleCancelClick}>
+                  Cancel
+                </BaseButton>
+                <BaseButton
+                  variant="success"
+                  onClick={handleSaveClick}
+                  loading={isSaving}
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Saving...' : 'Save Changes'}
+                </BaseButton>
+              </>
+            )}
+          </div>
+        </DashboardHeader>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
-              {error}
-            </div>
-          )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+            {error}
+          </div>
+        )}
 
-          {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md mb-6">
-              {success}
-            </div>
-          )}
+        {success && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md mb-6">
+            {success}
+          </div>
+        )}
 
-          {/* Client Information */}
+        {/* Client Information */}
+        <DashboardContent>
           <div className="space-y-6">
             {/* Company Name */}
             <div>
@@ -438,8 +427,8 @@ export default function ClientDetailPage() {
               <p className="text-gray-600">{formatDate(client!.updatedAt)}</p>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </DashboardContent>
+      </DashboardContainer>
+    </>
   );
 }
