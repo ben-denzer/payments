@@ -10,7 +10,8 @@
     "tsc": "tsc",
     "check": "eslint && tsc && jest",
     "format": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "setup": "npx simple-git-hooks"
   },
   "simple-git-hooks": {
     "pre-commit": "echo 'pre-commit hook' && npx pretty-quick --staged",
