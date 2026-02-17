@@ -75,3 +75,21 @@ export const GetClientRequestSchema = z.object({
   clientID: z.number(),
 });
 export type GetClientRequest = z.infer<typeof GetClientRequestSchema>;
+
+export const UpdateClientRequestSchema = z.object({
+  clientID: z.number(),
+  companyName: z
+    .string()
+    .min(2, { message: 'Company name must be at least 2 characters' })
+    .max(255, { message: 'Company name is too long' }),
+  primaryContactName: z
+    .string()
+    .min(2, { message: 'Contact name must be at least 2 characters' })
+    .max(255, { message: 'Contact name is too long' }),
+  primaryContactEmail: z.email({
+    message: 'Please enter a valid email address',
+  }),
+  status: ApplicantOrgStatusSchema,
+});
+
+export type UpdateClientRequest = z.infer<typeof UpdateClientRequestSchema>;

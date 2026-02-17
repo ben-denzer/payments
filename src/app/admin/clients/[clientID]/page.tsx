@@ -8,12 +8,15 @@ import { User } from '@/lib/types/user';
 import { checkAuth } from '@/lib/checkAuth';
 import { ApiRoutes, Routes } from '@/lib/routes';
 import { ClientLogger } from '@/lib/client-logger';
+import { parseZodError } from '@/lib/parseZodError';
 import {
   ApplicantOrg,
   ApplicantOrgSchema,
   ApplicantOrgStatus,
   GetClientRequest,
   GetClientRequestSchema,
+  UpdateClientRequest,
+  UpdateClientRequestSchema,
 } from '@/lib/types/applicantOrg';
 
 const logger = new ClientLogger();
@@ -52,6 +55,9 @@ export default function ClientDetailPage() {
   const [client, setClient] = useState<ApplicantOrg | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedClient, setEditedClient] = useState<Partial<ApplicantOrg>>({});
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
   const params = useParams();
   const clientID = params.clientID as string;
@@ -123,10 +129,14 @@ export default function ClientDetailPage() {
 
   const handleEditClick = () => {
     setIsEditMode(true);
+    setError('');
+    setSuccess('');
   };
 
   const handleCancelClick = () => {
     setIsEditMode(false);
+    setError('');
+    setSuccess('');
     setEditedClient({
       companyName: client!.companyName,
       primaryContactName: client!.primaryContactName,
@@ -135,10 +145,55 @@ export default function ClientDetailPage() {
     });
   };
 
-  const handleSaveClick = () => {
-    console.log('Saving client changes:', editedClient);
-    setIsEditMode(false);
-    // TODO: Implement actual save functionality
+  const handleSaveClick = async () => {
+    setError('');
+    setSuccess('');
+    setIsSaving(true);
+
+    try {
+      const apiData: UpdateClientRequest = {
+        clientID: parseInt(clientID),
+        companyName: editedClient.companyName || '',
+        primaryContactName: editedClient.primaryContactName || '',
+        primaryContactEmail: editedClient.primaryContactEmail || '',
+        status: editedClient.status || client!.status,
+      };
+
+      const result = UpdateClientRequestSchema.safeParse(apiData);
+      if (!result.success) {
+        setError(parseZodError(result.error));
+        return;
+      }
+
+      const response = await fetch(ApiRoutes.UPDATE_CLIENT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(result.data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to update client. Please try again.');
+        return;
+      }
+
+      await response.json();
+      logger.info('Client updated successfully', 'Update Client', { clientID });
+
+      // Refresh client data
+      await getClient();
+
+      setSuccess('Client updated successfully!');
+      setIsEditMode(false);
+    } catch (e) {
+      logger.error(e, 'Failed to update client');
+      setError('Failed to update client. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -237,13 +292,30 @@ export default function ClientDetailPage() {
                   <BaseButton variant="secondary" onClick={handleCancelClick}>
                     Cancel
                   </BaseButton>
-                  <BaseButton variant="success" onClick={handleSaveClick}>
-                    Save Changes
+                  <BaseButton
+                    variant="success"
+                    onClick={handleSaveClick}
+                    loading={isSaving}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? 'Saving...' : 'Save Changes'}
                   </BaseButton>
                 </>
               )}
             </div>
           </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md mb-6">
+              {success}
+            </div>
+          )}
 
           {/* Client Information */}
           <div className="space-y-6">
