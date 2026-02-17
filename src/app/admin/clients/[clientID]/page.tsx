@@ -18,7 +18,14 @@ import {
   UpdateClientRequest,
   UpdateClientRequestSchema,
 } from '@/lib/types/applicantOrg';
-import { DashboardContainer, DashboardContent, DashboardHeader, DashboardTitle } from '@/components/DashboardContainer';
+import {
+  DashboardContainer,
+  DashboardContent,
+  DashboardContentSpacer,
+  DashboardHeader,
+  DashboardTitle,
+} from '@/components/DashboardContainer';
+import AdminRequirementCardsContainer from '@/components/AdminRequirementCardsContainer';
 
 const logger = new ClientLogger();
 
@@ -381,6 +388,10 @@ export default function ClientDetailPage() {
               <p className="text-gray-600">{formatDate(client!.updatedAt)}</p>
             </div>
           </div>
+        </DashboardContent>
+        <DashboardContentSpacer />
+        <DashboardContent>
+          <AdminRequirementCardsContainer />
         </DashboardContent>
       </DashboardContainer>
     </>

@@ -29,3 +29,7 @@ export function DashboardTitle({ children }: { children: React.ReactNode }) {
 export function DashboardContent({ children }: { children: React.ReactNode }) {
   return <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">{children}</div>;
 }
+
+export function DashboardContentSpacer() {
+  return <div className="h-8"></div>;
+}
