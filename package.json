@@ -13,8 +13,8 @@
     "test": "jest"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx pretty-quick --staged",
-    "pre-push": "npm run check"
+    "pre-commit": "echo 'pre-commit hook' && npx pretty-quick --staged",
+    "pre-push": "echo 'pre-push hook' && npm run check"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.990.0",
