@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import BaseInput from '@/components/BaseInput';
 import BaseButton from '@/components/BaseButton';
 import { ApiRoutes, Routes } from '@/lib/routes';
@@ -12,6 +11,11 @@ import {
 import { parseZodError } from '@/lib/parseZodError';
 import { ClientLogger } from '@/lib/client-logger';
 import { useRouter } from 'next/navigation';
+import {
+  DashboardContainer,
+  DashboardHeader,
+  DashboardTitle,
+} from '@/components/DashboardContainer';
 const logger = new ClientLogger();
 
 const isProd = process.env.NEXT_PUBLIC_APP_ENV === 'production';
@@ -80,81 +84,79 @@ export default function CreateClient() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl mx-auto">
-        {/* Back button in top left */}
-        <div className="mb-8">
-          <Link
-            href={Routes.ADMIN}
-            className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
-          >
-            ← Back to Admin
-          </Link>
-        </div>
-
-        {/* Form container */}
-        <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-          <div className="mb-8">
-            <h2 className="text-center text-2xl font-bold text-gray-900">
-              Create New Client
-            </h2>
+    <DashboardContainer maxWidth="max-w-xl">
+      <DashboardHeader>
+        <div className="flex items-center space-x-4">
+          <div className="flex-col">
+            <DashboardTitle>Create New Client</DashboardTitle>
+            <BaseButton
+              size="xs"
+              className="mt-2"
+              variant="secondary"
+              onClick={() => router.back()}
+            >
+              ← Back
+            </BaseButton>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <BaseInput
-                id="companyName"
-                name="companyName"
-                type="text"
-                placeholder="Company Name"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                label="Company Name"
-                maxLength={255}
-              />
-
-              <BaseInput
-                id="contactName"
-                name="contactName"
-                type="text"
-                placeholder="Contact Name"
-                value={contactName}
-                onChange={(e) => setContactName(e.target.value)}
-                label="Contact Name"
-                maxLength={255}
-              />
-
-              <BaseInput
-                id="contactEmail"
-                name="contactEmail"
-                type="email"
-                placeholder="Contact Email"
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-                label="Contact Email"
-              />
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex flex-col-reverse sm:flex-row space-x-4 pt-4">
-              <BaseButton
-                type="submit"
-                variant="primary"
-                loading={isLoading}
-                className="flex-1 mb-6 sm:mb-0"
-              >
-                {isLoading ? 'Creating...' : 'Create Client'}
-              </BaseButton>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
+      </DashboardHeader>
+      {/* Form container */}
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg"
+      >
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <BaseInput
+            id="companyName"
+            name="companyName"
+            type="text"
+            placeholder="Company Name"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            label="Company Name"
+            maxLength={255}
+          />
+
+          <BaseInput
+            id="contactName"
+            name="contactName"
+            type="text"
+            placeholder="Contact Name"
+            value={contactName}
+            onChange={(e) => setContactName(e.target.value)}
+            label="Contact Name"
+            maxLength={255}
+          />
+
+          <BaseInput
+            id="contactEmail"
+            name="contactEmail"
+            type="email"
+            placeholder="Contact Email"
+            value={contactEmail}
+            onChange={(e) => setContactEmail(e.target.value)}
+            label="Contact Email"
+          />
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex flex-col-reverse sm:flex-row space-x-4 pt-4">
+          <BaseButton
+            type="submit"
+            variant="primary"
+            loading={isLoading}
+            className="flex-1 mb-6 sm:mb-0"
+          >
+            {isLoading ? 'Creating...' : 'Create Client'}
+          </BaseButton>
+        </div>
+      </form>
+    </DashboardContainer>
   );
 }

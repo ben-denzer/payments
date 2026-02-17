@@ -83,7 +83,20 @@ export default function ClientsPage() {
   return (
     <DashboardContainer>
       <DashboardHeader>
-        <DashboardTitle>Clients</DashboardTitle>
+        <div className="flex items-end space-x-4">
+          <div className="flex-col">
+            <DashboardTitle>Clients</DashboardTitle>
+            <BaseButton
+              size="xs"
+              className="mt-2"
+              variant="secondary"
+              href={Routes.ADMIN}
+            >
+              ← Back
+            </BaseButton>
+          </div>
+        </div>
+
         <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
           New Client
         </BaseButton>

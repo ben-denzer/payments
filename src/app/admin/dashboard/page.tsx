@@ -12,6 +12,12 @@ import {
   ApplicantOrgList,
   ApplicantOrgListSchema,
 } from '@/lib/types/applicantOrg';
+import {
+  DashboardContainer,
+  DashboardContent,
+  DashboardHeader,
+  DashboardTitle,
+} from '@/components/DashboardContainer';
 const logger = new ClientLogger();
 
 export default function AdminDashboard() {
@@ -81,34 +87,33 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-screen mx-auto">
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Admin Dashboard
-            </h1>
-            <p className="text-gray-600">Welcome to your personal dashboard!</p>
-          </div>
+    <DashboardContainer>
+      <DashboardHeader>
+        <DashboardTitle>Admin Dashboard</DashboardTitle>
+      </DashboardHeader>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Recent Clients
-              </h2>
-              <div className="flex space-x-3">
-                <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
-                  New Client
-                </BaseButton>
-                <BaseButton variant="secondary" href={Routes.CLIENTS}>
-                  View All
-                </BaseButton>
-              </div>
+      <div className="flex flex-col space-y-6">
+        <DashboardContent>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Recent Clients
+            </h2>
+            <div className="flex space-x-3">
+              <BaseButton variant="success" href={Routes.CREATE_CLIENT}>
+                New Client
+              </BaseButton>
+              <BaseButton variant="secondary" href={Routes.CLIENTS}>
+                View All
+              </BaseButton>
             </div>
-            {clientList && <ClientList clients={clientList.slice(0, 5)} />}
           </div>
-        </div>
+          {clientList && <ClientList clients={clientList.slice(0, 5)} />}
+        </DashboardContent>
+
+        <DashboardContent>
+          <div>Here is another section</div>
+        </DashboardContent>
       </div>
-    </div>
+    </DashboardContainer>
   );
 }

@@ -264,11 +264,18 @@ export default function ClientDetailPage() {
     <>
       <DashboardContainer>
         <DashboardHeader>
-          <div className="flex items-center space-x-4">
-            <BaseButton variant="secondary" href={Routes.CLIENTS}>
-              ← Clients
-            </BaseButton>
-            <DashboardTitle>{client!.companyName}</DashboardTitle>
+          <div className="flex items-end space-x-4">
+            <div className="flex-col">
+              <DashboardTitle>{client!.companyName}</DashboardTitle>
+              <BaseButton
+                size="xs"
+                className="mt-2"
+                variant="secondary"
+                href={Routes.CLIENTS}
+              >
+                ← Clients
+              </BaseButton>
+            </div>
           </div>
           <div className="flex space-x-3">
             {!isEditMode ? (
