@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "tsc": "tsc",
-    "check": "eslint && tsc",
+    "check": "eslint && tsc && jest",
     "test": "jest"
   },
   "dependencies": {
