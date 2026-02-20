@@ -8,6 +8,7 @@ export const DBUserSchema = z.object({
   updated_at: z.string(),
   is_admin: z.boolean(),
   is_owner: z.boolean(),
+  applicant_org_id: z.number().nullable(),
 });
 
 export type DBUser = z.infer<typeof DBUserSchema>;
@@ -17,6 +18,7 @@ export const UserSchema = z.object({
   email: z.email(),
   isAdmin: z.boolean(),
   isOwner: z.boolean(),
+  applicantOrgId: z.number().nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;
