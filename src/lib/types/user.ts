@@ -29,3 +29,18 @@ export const JWTPayloadSchema = UserSchema.extend({
 });
 
 export type JWTPayload = z.infer<typeof JWTPayloadSchema>;
+
+export const JWTPayloadApplicantSchema = JWTPayloadSchema.extend({
+  isAdmin: z.literal(false),
+  isOwner: z.literal(false),
+  applicantOrgId: z.number(),
+});
+
+export type JWTPayloadApplicant = z.infer<typeof JWTPayloadApplicantSchema>;
+
+export const JWTPayloadAdminSchema = JWTPayloadSchema.extend({
+  isAdmin: z.literal(true),
+  applicantOrgId: z.null(),
+});
+
+export type JWTPayloadAdmin = z.infer<typeof JWTPayloadAdminSchema>;
