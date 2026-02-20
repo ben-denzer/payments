@@ -20,7 +20,7 @@ export async function validateAdmin(cookieStore: ReadonlyRequestCookies, routeNa
     logError(new Error('User trying to access admin route with bad cookie'), routeName, { authToken });
     throw new AuthError('Unauthorized');
   }
-  if (!payload.isAdmin) {
+  if (!payload.isAdmin || payload.applicantOrgId) {
     logError(new Error('Non admin user trying to access admin route'), routeName, { authToken });
     throw new AuthError('Unauthorized');
   }

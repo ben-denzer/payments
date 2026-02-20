@@ -8,7 +8,7 @@ import { validateAdmin } from '../validateAdmin';
 import { AuthError } from '@/lib/types/AuthError';
 import z from 'zod';
 
-const ROUTE_NAME = 'Get Client Files API';
+const ROUTE_NAME = 'Get Client Files API (Admin)';
 
 const GetClientFilesRequestSchema = z.object({
   clientID: z.string().min(1),

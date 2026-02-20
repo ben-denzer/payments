@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     // Get user data from database
     const user: Omit<DBUser, 'password_hash' | 'updated_at'> | null = await executeQuerySingle(
-      'SELECT id, email, is_admin, is_owner, created_at FROM users WHERE id = ? AND is_owner = ? AND is_admin = ?',
+      'SELECT id, email, is_admin, is_owner, applicant_org_id,created_at FROM users WHERE id = ? AND is_owner = ? AND is_admin = ? ',
       [payload.id, !!payload.isOwner, !!payload.isAdmin],
     );
 
@@ -30,11 +30,16 @@ export async function GET(request: NextRequest) {
       throw new AuthError('User not found');
     }
 
+    if (payload.applicantOrgId !== user.applicant_org_id) {
+      throw new AuthError('User does not belong to this organization');
+    }
+
     const userData: User = {
       id: user.id,
       email: user.email,
       isAdmin: !!payload.isAdmin,
       isOwner: !!payload.isOwner,
+      applicantOrgId: user.applicant_org_id || null,
     };
     UserSchema.parse(userData);
 

@@ -47,8 +47,8 @@ export async function POST(request: NextRequest) {
 
     // Create user
     const userId = await executeInsert(
-      'INSERT INTO users (email, password_hash, is_admin, is_owner) VALUES (?, ?, ?, ?)',
-      [email, hashedPassword, true, true],
+      'INSERT INTO users (email, password_hash, is_admin, is_owner, applicant_org_id) VALUES (?, ?, ?, ?, ?)',
+      [email, hashedPassword, true, true, null],
     );
 
     // Create JWT token
@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
       email,
       isAdmin: true,
       isOwner: true,
+      applicantOrgId: null,
     });
 
     // Set HTTP-only cookie

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
 
     // Find user by email
     const user: Omit<DBUser, 'created_at' | 'updated_at'> | null = await executeQuerySingle(
-      'SELECT id, email, password_hash, is_admin, is_owner FROM users WHERE email = ?',
+      'SELECT id, email, password_hash, is_admin, is_owner, applicant_org_id FROM users WHERE email = ?',
       [email],
     );
 
@@ -35,6 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
       email: user.email,
       isAdmin: !!user.is_admin,
       isOwner: !!user.is_owner,
+      applicantOrgId: user.applicant_org_id || null,
     };
     UserSchema.parse(userData);
 
